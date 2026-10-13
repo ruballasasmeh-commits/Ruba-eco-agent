@@ -1,0 +1,2035 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EcoLoop — sustainability agent</title>
+<meta name="description" content="EcoLoop helps you recycle, downcycle and upcycle everyday items safely, in English and Arabic.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#173F25; --forest-2:#235A35; --sprout:#A8D5A2;
+  --bg:#EEF5EE; --card:#FFFFFF; --tile:#F3F8F4; --tile-on:#E3F0E6; --mist:#EEF5EE;
+  --ink:#13261A; --muted:#4A6151; --line:#CFE1D1; --line-strong:#9CC2A3;
+  --accent:#2E7A3E; --accent-hover:#235A35; --on-accent:#FFFFFF; --accent-text:#2B7139;
+  --warn-bg:#FFF4D6; --warn-ink:#6E4300; --danger-bg:#FDEBEA; --danger-ink:#8E1F17; --info-ink:#1F5A8A;
+  --header:#173F25; --header-ink:#FFFFFF; --header-muted:#C9E6CC;
+  --heat0:#E2EBE3; --heat1:#B5DDB9; --heat2:#7CC387; --heat3:#3E9A50; --heat4:#1F6B31;
+  --font:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --head:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --emoji:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[lang="ar"]{--font:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;--head:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1D13; --card:#14291B; --tile:#173120; --tile-on:#204530; --mist:#1A3624;
+    --ink:#E8F3E9; --muted:#AFC9B4; --line:#2C4D37; --line-strong:#4D7A5A;
+    --accent:#86D293; --accent-hover:#A6E2AF; --on-accent:#0B1A10; --accent-text:#93DA9F;
+    --warn-bg:#3A2E10; --warn-ink:#F7D88F; --danger-bg:#3F1A17; --danger-ink:#FFB4AC; --info-ink:#9CCBF2;
+    --header:#0A1B10; --header-muted:#B3D6B8;
+    --heat0:#1E3726; --heat1:#2D5B3A; --heat2:#3F8250; --heat3:#5FB06F; --heat4:#93DA9F;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1D13; --card:#14291B; --tile:#173120; --tile-on:#204530; --mist:#1A3624;
+  --ink:#E8F3E9; --muted:#AFC9B4; --line:#2C4D37; --line-strong:#4D7A5A;
+  --accent:#86D293; --accent-hover:#A6E2AF; --on-accent:#0B1A10; --accent-text:#93DA9F;
+  --warn-bg:#3A2E10; --warn-ink:#F7D88F; --danger-bg:#3F1A17; --danger-ink:#FFB4AC; --info-ink:#9CCBF2;
+  --header:#0A1B10; --header-muted:#B3D6B8;
+  --heat0:#1E3726; --heat1:#2D5B3A; --heat2:#3F8250; --heat3:#5FB06F; --heat4:#93DA9F;
+}
+/* High contrast */
+:root[data-contrast="high"]{--bg:#FFFFFF;--card:#FFFFFF;--tile:#FFFFFF;--tile-on:#DFF2E2;--ink:#000;--muted:#1F1F1F;--line:#1B3A24;--line-strong:#000;--accent:#0F4A1F;--accent-hover:#000;--accent-text:#0F4A1F;--header:#000;--warn-ink:#4A2C00;--danger-ink:#6B0F08}
+@media (prefers-color-scheme: dark){:root[data-contrast="high"]:not([data-theme="light"]){--bg:#000;--card:#000;--tile:#000;--tile-on:#12361C;--ink:#FFF;--muted:#F0F0F0;--line:#FFF;--line-strong:#FFF;--accent:#A6F0B1;--accent-hover:#FFF;--on-accent:#000;--accent-text:#A6F0B1;--header:#000;--warn-bg:#2A1F00;--warn-ink:#FFE08A;--danger-bg:#2A0000;--danger-ink:#FFC2BA}}
+:root[data-contrast="high"][data-theme="dark"]{--bg:#000;--card:#000;--tile:#000;--tile-on:#12361C;--ink:#FFF;--muted:#F0F0F0;--line:#FFF;--line-strong:#FFF;--accent:#A6F0B1;--accent-hover:#FFF;--on-accent:#000;--accent-text:#A6F0B1;--header:#000;--warn-bg:#2A1F00;--warn-ink:#FFE08A;--danger-bg:#2A0000;--danger-ink:#FFC2BA}
+:root[data-contrast="high"] .mat,:root[data-contrast="high"] .panel,:root[data-contrast="high"] .card{border-width:2px}
+
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:1.0625rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+:root[data-spacing="wide"] body{word-spacing:.16em;line-height:1.85}
+:root[data-spacing="wide"]:lang(en) body{letter-spacing:.04em}
+:root[data-motion="reduce"] *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+img,svg{max-width:100%}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:8px}
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;inset-inline-start:12px;top:-60px;z-index:50;background:var(--card);color:var(--ink);padding:10px 16px;border-radius:10px;font-weight:700;border:2px solid var(--accent)}
+.skip:focus{top:calc(env(safe-area-inset-top,0px) + 10px)}
+.emo{font-family:var(--emoji);line-height:1;font-style:normal}
+
+/* Header */
+.top{background:var(--header);color:var(--header-ink);padding:16px 20px 76px;position:relative;overflow:hidden}
+.top::after{content:"";position:absolute;inset:auto -10% -1px -10%;height:48px;background:var(--bg);border-radius:50% 50% 0 0/100% 100% 0 0}
+.wrap{max-width:1100px;margin:0 auto}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font:800 1.2rem var(--head);margin-inline-end:auto}
+.brand svg{width:30px;height:30px}
+.hbtn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;font-weight:700}
+.hbtn:hover{background:rgba(255,255,255,.18)}
+.hbtn .emo{font-size:1.1rem}
+nav.tabs{display:flex;gap:6px;margin-top:18px;background:rgba(255,255,255,.08);border-radius:999px;padding:5px;width:max-content;max-width:100%}
+nav.tabs button{border:0;background:transparent;color:#fff;border-radius:999px;padding:9px 18px;min-height:44px;font-weight:700}
+nav.tabs button[aria-current="page"]{background:#fff;color:#173F25}
+h1{font:800 clamp(2rem,5.5vw,3.3rem)/1.08 var(--head);margin:22px 0 10px;max-width:17ch;letter-spacing:-.015em}
+:root[lang="ar"] h1{letter-spacing:0;line-height:1.3}
+.lede{max-width:58ch;color:var(--header-muted);margin:0 0 22px}
+.search{display:flex;gap:8px;background:#fff;border-radius:999px;padding:6px;max-width:700px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.search input{flex:1;min-width:0;border:0;background:transparent;padding:10px 14px;color:#13261A;font-size:1.02rem}
+.search input::placeholder{color:#5D7363}
+.search input:focus{outline:none}
+.search:focus-within{box-shadow:0 0 0 3px var(--sprout),0 10px 30px rgba(0,0,0,.2)}
+.btn{border:0;border-radius:999px;padding:10px 18px;min-height:44px;font-weight:700;background:var(--accent);color:var(--on-accent);white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.top .btn{background:#2E7A3E;color:#fff}
+.btn:hover{background:var(--accent-hover)}
+.btn:disabled{opacity:.6;cursor:progress}
+.btn.ghost{background:transparent;color:var(--accent-text);border:2px solid var(--accent)}
+.btn.ghost:hover{background:var(--tile-on)}
+.hint{font-size:.9rem;color:var(--header-muted);margin:10px 4px 0}
+
+main{padding:0 20px 50px;margin-top:-34px;position:relative;z-index:1}
+h2{font:700 1.4rem/1.3 var(--head);margin:0 0 14px}
+h3{font-family:var(--head)}
+.panel{background:var(--card);border:1.5px solid var(--line);border-radius:24px;padding:clamp(18px,3vw,30px)}
+.muted{color:var(--muted)}
+
+/* Material grid */
+.grid-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0;margin:0;list-style:none}
+@media (min-width:760px){.grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}}
+.mat{width:100%;height:100%;background:var(--tile);border:2px solid var(--line);border-radius:18px;padding:18px 8px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;transition:border-color .15s,background .15s;min-height:120px}
+.mat:hover{border-color:var(--accent)}
+.mat[aria-pressed="true"]{border-color:var(--accent);background:var(--tile-on);box-shadow:inset 0 0 0 1px var(--accent)}
+.mat .emo{font-size:2.3rem}
+.mat .lbl{font-size:1rem;line-height:1.3}
+.new{font-size:.72rem;font-weight:700;color:var(--accent-text);border:1.5px solid var(--accent);border-radius:999px;padding:0 8px}
+@media (max-width:420px){.grid{gap:10px}.mat{padding:14px 4px;min-height:108px}.mat .lbl{font-size:.9rem}}
+
+/* Result */
+#result{margin-top:30px;scroll-margin-top:12px}
+.res-head{display:flex;gap:16px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+.res-head .ic{flex:none;width:68px;height:68px;border-radius:18px;background:var(--tile);border:2px solid var(--line);display:grid;place-items:center;font-size:2.3rem}
+.res-head h2{margin:0;font-size:1.7rem}
+.res-head p{margin:2px 0 0;color:var(--muted)}
+.res-head .grow{flex:1;min-width:200px}
+.tag{display:inline-block;font:700 .78rem var(--font);background:var(--tile-on);color:var(--accent-text);border-radius:999px;padding:2px 10px;margin-inline-start:8px;vertical-align:middle}
+.safety{border-radius:16px;padding:16px 18px;margin-bottom:24px;background:var(--warn-bg);color:var(--warn-ink);border:1.5px solid color-mix(in srgb,var(--warn-ink) 30%,transparent)}
+.safety h3{margin:0 0 8px;font-size:1.1rem;display:flex;gap:8px;align-items:center}
+.safety ul{margin:0;padding:0;list-style:none}
+.safety li{display:flex;gap:10px;margin:8px 0;align-items:flex-start}
+.lvl{flex:none;font-size:.78rem;font-weight:700;border-radius:999px;padding:2px 9px;margin-top:2px;border:1.5px solid currentColor;white-space:nowrap}
+.lvl.h{color:var(--danger-ink);background:var(--danger-bg)}
+.lvl.m{color:var(--warn-ink)}
+.lvl.l{color:var(--info-ink)}
+.cycle{display:grid;grid-template-columns:repeat(3,1fr);background:var(--tile);border:1.5px solid var(--line);border-radius:18px;padding:5px;margin-bottom:20px}
+.cycle button{border:0;background:transparent;border-radius:14px;padding:10px 6px;min-height:56px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.cycle button b{font:700 1.02rem var(--head)}
+.cycle button small{color:var(--muted);font-size:.78rem;text-align:center}
+.cycle button[aria-selected="true"]{background:var(--forest);color:#fff}
+.cycle button[aria-selected="true"] small{color:var(--sprout)}
+.cols{display:grid;grid-template-columns:1.4fr 1fr;gap:28px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.method h3{font-size:1.2rem;margin:0 0 6px}
+.method .sum{margin:0 0 12px;color:var(--muted)}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0 0 14px}
+.steps li{counter-increment:s;position:relative;padding-block:9px;padding-inline-start:44px;border-bottom:1px dashed var(--line)}
+.steps li::before{content:counter(s);position:absolute;inset-inline-start:0;top:9px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--on-accent);font:700 .9rem var(--font);display:grid;place-items:center}
+.idea{border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px;background:var(--tile)}
+.idea h4{margin:0 0 6px;font:700 1.05rem var(--head)}
+.guide{border-top:1.5px solid var(--line);padding-top:12px;margin-top:4px}
+.guide p{margin:0 0 8px;font-size:.92rem}
+.gbtns{display:flex;flex-wrap:wrap;gap:8px}
+.gbtn{display:inline-flex;align-items:center;gap:6px;min-height:44px;border-radius:999px;padding:7px 15px;font-weight:700;font-size:.95rem;border:2px solid var(--accent);color:var(--accent-text);background:transparent}
+.gbtn.best{background:var(--accent);color:var(--on-accent)}
+.gbtn:hover{background:var(--accent-hover);border-color:var(--accent-hover);color:var(--on-accent)}
+.gbtn small{font-weight:400;font-size:.75rem;opacity:.9}
+.benefit{background:var(--forest);color:#fff;border-radius:20px;padding:20px;align-self:start}
+:root[data-contrast="high"] .benefit{background:#000;border:2px solid #fff}
+.benefit h3{font-size:1.15rem;margin:0 0 14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.stat{background:rgba(255,255,255,.09);border-radius:14px;padding:12px}
+.stat strong{display:block;font:800 1.35rem/1.15 var(--head);color:var(--sprout)}
+.stat span{font-size:.86rem;color:#DCEEDD}
+.benefit ul{margin:0;padding-inline-start:20px;color:#E9F5EA}
+.benefit li{margin:6px 0}
+.sdg{margin:12px 0 0;font-size:.86rem;color:#C9E6CC}
+.logbox{margin-top:24px;border:2px dashed var(--line-strong);border-radius:18px;padding:16px}
+.logbox h3{margin:0 0 10px;font-size:1.05rem}
+.logbox .gbtns .btn{background:var(--tile-on);color:var(--accent-text);border:2px solid var(--accent)}
+.logbox .gbtns .btn:hover{background:var(--accent);color:var(--on-accent)}
+.ask{margin-top:24px;border-top:1.5px solid var(--line);padding-top:20px}
+.ask h3{font-size:1.05rem;margin:0 0 10px}
+.ask .search{box-shadow:none;border:1.5px solid var(--line);background:var(--card);max-width:none}
+.ask .search input{color:var(--ink)}
+.ask .search input::placeholder{color:var(--muted)}
+.answer{white-space:pre-wrap;margin-top:12px;background:var(--tile);border-radius:14px;padding:14px 16px}
+.status{display:flex;align-items:center;gap:10px;color:var(--muted);padding:16px 2px}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--accent);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(.5);opacity:.4}}
+.err{background:var(--danger-bg);color:var(--danger-ink);border-radius:14px;padding:12px 16px}
+
+/* Dialogs */
+dialog{border:0;padding:0;border-radius:24px;background:var(--card);color:var(--ink);width:min(780px,calc(100% - 20px));max-height:calc(100dvh - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));box-shadow:0 30px 80px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(5,20,10,.6)}
+.dhead{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1.5px solid var(--line);position:sticky;top:0;background:var(--card);z-index:2}
+.dhead h2{margin:0;font-size:1.2rem;flex:1}
+.x{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:var(--tile);font-size:1.3rem;display:grid;place-items:center}
+.dbody{padding:18px 20px 22px}
+.vtabs{display:flex;gap:6px;background:var(--tile);border:1.5px solid var(--line);border-radius:999px;padding:4px;margin-bottom:16px}
+.vtabs button{flex:1;border:0;background:transparent;border-radius:999px;min-height:44px;font-weight:700;display:inline-flex;gap:6px;align-items:center;justify-content:center}
+.vtabs button[aria-selected="true"]{background:var(--forest);color:#fff}
+.vtabs .rec{font-size:.7rem;font-weight:700;background:var(--sprout);color:#173F25;border-radius:999px;padding:1px 7px}
+.stage{position:relative;border-radius:20px;overflow:hidden;background:linear-gradient(150deg,#1F5A33,#173F25 55%,#0F2C19);color:#fff;display:flex;flex-direction:column}
+.bars{display:flex;gap:4px;padding:12px 14px 0}
+.bars span{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.25);overflow:hidden}
+.bars span i{display:block;height:100%;width:0;background:#fff}
+.bars span.done i{width:100%}
+.bars span.cur i{animation:fill var(--dur,5s) linear forwards;animation-play-state:var(--ps,paused)}
+@keyframes fill{to{width:100%}}
+.scene{flex:1;display:grid;place-items:center;position:relative;min-height:clamp(190px,34vw,280px);padding:10px 0 18px}
+.scene .pair{position:relative;font-family:var(--emoji);line-height:1}
+.scene .big{font-size:clamp(4rem,14vw,7rem);display:block}
+.scene .act{position:absolute;inset-inline-end:-42%;bottom:-12%;font-size:clamp(2.2rem,7vw,3.4rem);background:#fff;border-radius:50%;width:1.6em;height:1.6em;display:grid;place-items:center;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.scene.pop .pair{animation:pop .45s ease-out}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+.cap{margin:0;padding:12px 18px 16px;background:rgba(0,0,0,.35);font-size:clamp(1rem,2.6vw,1.2rem);min-height:6.2em}
+.cap b{display:block;font-size:.8rem;color:var(--sprout);letter-spacing:.03em}
+.ctrls{display:flex;gap:8px;justify-content:center;align-items:center;margin-top:12px;flex-wrap:wrap}
+.cbtn{min-width:48px;min-height:48px;border-radius:999px;border:2px solid var(--line-strong);background:var(--tile);display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0 14px;font-weight:700}
+.cbtn.main{background:var(--accent);color:var(--on-accent);border-color:var(--accent);min-width:110px}
+.cbtn[aria-pressed="true"]{background:var(--tile-on);border-color:var(--accent);color:var(--accent-text)}
+.vnote{font-size:.88rem;color:var(--muted);text-align:center;margin:10px 0 0}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:0;padding:0;list-style:none}
+.photo{margin:0;border:1.5px solid var(--line);border-radius:18px;overflow:hidden;background:var(--tile)}
+.photo .pic{aspect-ratio:4/3;display:grid;place-items:center;position:relative;background:linear-gradient(140deg,var(--g1),var(--g2))}
+.photo .pic .pair{position:relative;font-family:var(--emoji);line-height:1}
+.photo .pic .big{font-size:3.6rem;display:block}
+.photo .pic .act{position:absolute;inset-inline-end:-26px;bottom:-10px;font-size:1.7rem;background:#fff;border-radius:50%;width:1.7em;height:1.7em;display:grid;place-items:center;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+.photo .num{position:absolute;top:10px;inset-inline-start:10px;background:rgba(0,0,0,.55);color:#fff;font-weight:700;font-size:.85rem;border-radius:999px;padding:2px 10px}
+.photo figcaption{padding:12px 14px;font-size:.98rem}
+.readv h3{margin:0 0 4px;font-size:1.3rem}
+.readv .safety{margin:14px 0}
+.tipbox{background:var(--tile);border-inline-start:5px solid var(--accent);border-radius:12px;padding:12px 14px;margin-top:14px}
+.setgrp{border:0;margin:0 0 18px;padding:0}
+.setgrp legend{font:700 1.02rem var(--head);margin-bottom:8px;padding:0}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg span{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px 16px;border-radius:999px;border:2px solid var(--line-strong);background:var(--tile);font-weight:700}
+.seg input:checked + span{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.seg input:focus-visible + span{outline:3px solid var(--accent);outline-offset:3px}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.switch input{appearance:none;-webkit-appearance:none;width:52px;height:30px;border-radius:999px;background:color-mix(in srgb,var(--ink) 22%,transparent);border:2px solid color-mix(in srgb,var(--ink) 35%,transparent);position:relative;flex:none;margin:0;cursor:pointer;transition:background .15s}
+.switch input::after{content:"";position:absolute;top:1px;inset-inline-start:1px;width:24px;height:24px;border-radius:50%;background:#fff;transition:inset-inline-start .15s}
+.switch input:checked{background:var(--accent);border-color:var(--accent)}
+.switch input:checked::after{inset-inline-start:23px;background:var(--on-accent)}
+
+/* Tracker */
+.tgrid{display:grid;gap:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:14px 16px}
+.card .v{font:800 1.9rem/1.1 var(--head);color:var(--accent-text);display:flex;align-items:center;gap:6px}
+.card .k{color:var(--muted);font-size:.92rem}
+.weeknav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.weeknav .lbl{font-weight:700;margin-inline:6px;flex:1}
+.tscroll{overflow-x:auto;border:1.5px solid var(--line);border-radius:16px}
+table.habits{border-collapse:collapse;width:100%;min-width:620px}
+.habits th,.habits td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:center}
+.habits thead th{font-size:.82rem;color:var(--muted);font-weight:700;background:var(--tile);position:sticky;top:0}
+.habits thead th.today{color:var(--accent-text)}
+.habits th[scope="row"]{text-align:start;font-weight:700;padding-inline-start:14px;min-width:180px;background:var(--card);position:sticky;inset-inline-start:0;z-index:1}
+.habits tr:last-child th,.habits tr:last-child td{border-bottom:0}
+.hrow{display:flex;align-items:center;gap:8px}
+.hrow .emo{font-size:1.2rem}
+.delh{margin-inline-start:auto;border:0;background:transparent;color:var(--muted);width:36px;height:36px;border-radius:50%;font-size:1.1rem}
+.delh:hover{background:var(--danger-bg);color:var(--danger-ink)}
+.chk{display:inline-grid;place-items:center;position:relative;width:44px;height:44px;cursor:pointer}
+.chk input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.chk span{width:28px;height:28px;border-radius:8px;border:2px solid var(--line-strong);background:var(--card);display:grid;place-items:center;font-weight:800;color:transparent;transition:background .12s}
+.chk input:checked + span{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chk input:checked + span::after{content:"✓"}
+.chk input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
+.chk input:disabled + span{opacity:.35}
+td.today{background:var(--tile)}
+.prog{display:flex;align-items:center;gap:8px;min-width:90px}
+.prog .b{flex:1;height:8px;border-radius:4px;background:var(--heat0);overflow:hidden}
+.prog .b i{display:block;height:100%;background:var(--accent)}
+.prog small{font-weight:700;min-width:2.5em}
+.addh{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.addh input{flex:1;min-width:200px;border:1.5px solid var(--line-strong);border-radius:999px;padding:10px 16px;background:var(--card);min-height:44px}
+.heat{display:grid;grid-template-rows:repeat(7,auto);grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;max-width:420px}
+.heat i{aspect-ratio:1;border-radius:4px;background:var(--heat0)}
+.heat i.l1{background:var(--heat1)}.heat i.l2{background:var(--heat2)}.heat i.l3{background:var(--heat3)}.heat i.l4{background:var(--heat4)}
+.heat i.t{outline:2px solid var(--ink);outline-offset:1px}
+.legend{display:flex;align-items:center;gap:4px;font-size:.82rem;color:var(--muted);margin-top:8px}
+.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+.mbar{display:grid;grid-template-columns:120px 1fr 40px;gap:10px;align-items:center;margin:8px 0}
+.mbar .b{height:14px;border-radius:7px;background:var(--heat0);overflow:hidden}
+.mbar .b i{display:block;height:100%;background:var(--accent)}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;list-style:none;padding:0;margin:0}
+.badge{border:1.5px solid var(--line);border-radius:16px;padding:12px;text-align:center;background:var(--tile)}
+.badge .emo{font-size:2rem;display:block;margin-bottom:4px}
+.badge b{display:block}
+.badge small{color:var(--muted);display:block}
+.badge.off{opacity:.55;filter:grayscale(1)}
+.badge .st{font-size:.75rem;font-weight:700;margin-top:6px;display:inline-block;border-radius:999px;padding:1px 8px;border:1.5px solid currentColor}
+.loglist{list-style:none;padding:0;margin:0}
+.loglist li{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.loglist .emo{font-size:1.6rem}
+.loglist .meta{flex:1}
+.loglist small{color:var(--muted);display:block}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+.linkbtn{background:none;border:0;color:var(--danger-ink);text-decoration:underline;font-weight:700;padding:10px 0;min-height:44px}
+.tgrid>*,.two>*,.cols>*,.panel{min-width:0}
+@media (max-width:520px){.safety li{flex-direction:column;gap:4px}.vtabs .rec{font-size:0;padding:0 5px}.vtabs .rec::before{content:"★";font-size:.8rem}.vtabs button{font-size:.92rem}}
+.reading{outline:4px solid #F5B700!important;outline-offset:4px;border-radius:8px;background:color-mix(in srgb,#F5B700 14%,transparent)}
+.readerbar{position:fixed;inset-inline:0;bottom:0;z-index:40;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+  background:var(--card);border-top:2px solid var(--accent);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 24px rgba(0,0,0,.15)}
+.readerbar[hidden]{display:none}
+.readerbar .rb-text{font-weight:700;flex:1 1 220px;text-align:center}
+.readerbar .btn{min-height:44px;padding:8px 14px;font-size:.92rem}
+@media (max-width:520px){.readerbar .rb-text{flex-basis:100%;font-size:.9rem}}
+body.has-reader{padding-bottom:110px}
+footer{color:var(--muted);font-size:.86rem;text-align:center;padding:10px 20px 30px}
+/* ===== QUIZ & PLAY ===== */
+.qwrap{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.qwrap{grid-template-columns:1fr}}
+.qmeta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.qkind{font:700 .8rem var(--font);text-transform:uppercase;letter-spacing:.06em;color:var(--accent-text)}
+:root[lang="ar"] .qkind{letter-spacing:0;text-transform:none}
+.qprompt{font:700 clamp(1.15rem,2.6vw,1.45rem)/1.35 var(--head);margin:0 0 10px}
+.qfact{background:var(--tile);border:1.5px dashed var(--line-strong);border-radius:14px;padding:12px 16px;margin:0 0 16px;font-size:1.05rem}
+.qfact b{color:var(--accent-text)}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:12px;list-style:none;padding:0;margin:0}
+@media (max-width:560px){.qopts{grid-template-columns:1fr}}
+.qopt{width:100%;min-height:76px;border:0;border-radius:16px;padding:14px 16px;font-weight:700;font-size:1.02rem;line-height:1.35;text-align:start;display:flex;gap:12px;align-items:center;box-shadow:0 5px 0 rgba(0,0,0,.22);transition:transform .08s,box-shadow .08s,opacity .15s}
+.qopt:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 0 rgba(0,0,0,.22)}
+.qopt:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.22)}
+.qopt .k{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.28);font-size:.9rem}
+.qopt.c0{background:#C2362F;color:#fff}.qopt.c1{background:#1E64B4;color:#fff}.qopt.c2{background:#F2B705;color:#1B1500}.qopt.c3{background:#1F7A38;color:#fff}
+.qopt.c2 .k{background:rgba(0,0,0,.14)}
+.qopt:disabled{cursor:default;opacity:.45}
+.qopt.right{opacity:1;outline:4px solid var(--ink);outline-offset:3px}
+.qopt.picked{opacity:1}
+.qfb{margin-top:16px;border-radius:16px;padding:14px 16px;font-weight:700;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.qfb.ok{background:var(--tile-on);color:var(--accent-text);border:2px solid var(--accent)}
+.qfb.no{background:var(--danger-bg);color:var(--danger-ink);border:2px solid currentColor}
+.qfb .grow{flex:1 1 220px}
+.qfb .grow small{display:block;font-weight:400;color:var(--ink);margin-top:4px}
+.pop{display:inline-block;animation:pop .45s ease-out}
+@keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.15);opacity:1}100%{transform:scale(1)}}
+.side{display:grid;gap:16px}
+.shop{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.shop li{border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--tile)}
+.shop .top2{display:flex;gap:10px;align-items:center}
+.shop .top2 .emo{font-size:1.6rem}
+.shop b{display:block}
+.shop small{color:var(--muted);display:block}
+.pips{display:flex;gap:4px;margin:8px 0}
+.pips i{flex:1;height:7px;border-radius:9px;background:var(--line)}
+.pips i.on{background:var(--accent)}
+.shop .btn{width:100%;min-height:44px}
+.gamecard{background:linear-gradient(160deg,#173F25,#2E7A3E);color:#fff;border-radius:24px;padding:20px;border:0}
+.gamecard h2{color:#fff;display:flex;gap:8px;align-items:center}
+.gamecard p{color:#DCEEDD;margin:0 0 14px}
+.gamecard .btn{background:#F2B705;color:#1B1500;width:100%;font-size:1.05rem}
+.gamecard .btn:hover{background:#FFD24D}
+.gamecard .btn:disabled{opacity:.55;cursor:not-allowed}
+.gamecard .need{font-size:.9rem;color:#FFE08A;margin:10px 0 0}
+.ghud{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.ghud .chip{background:var(--tile);border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:700}
+.ghud .grow{flex:1}
+.arena{position:relative;height:clamp(250px,42vh,380px);border-radius:20px;overflow:hidden;border:2px solid var(--line-strong);
+  background:linear-gradient(180deg,#CFE9F7 0%,#EAF6EC 75%,#B9DDB4 100%)}
+:root[data-theme="dark"] .arena{background:linear-gradient(180deg,#10273A 0%,#14291B 75%,#1F4A2A 100%)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .arena{background:linear-gradient(180deg,#10273A 0%,#14291B 75%,#1F4A2A 100%)}}
+.arena .ground{position:absolute;inset-inline:0;bottom:0;height:10px;background:repeating-linear-gradient(90deg,#C2362F 0 18px,#F2B705 18px 36px)}
+.fall{position:absolute;left:50%;top:0;transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;gap:4px;will-change:transform}
+.fall .emo{font-size:3rem;filter:drop-shadow(0 4px 4px rgba(0,0,0,.2))}
+.fall span:last-child{background:var(--card);color:var(--ink);border-radius:999px;padding:3px 12px;font-weight:700;font-size:.95rem;border:1.5px solid var(--line-strong);white-space:nowrap}
+.gmsg{position:absolute;inset-inline:12px;top:12px;text-align:center;font-weight:700;border-radius:12px;padding:6px 10px}
+.gmsg.ok{background:var(--tile-on);color:var(--accent-text)}
+.gmsg.no{background:var(--danger-bg);color:var(--danger-ink)}
+.bins{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+@media (max-width:560px){.bins{grid-template-columns:1fr 1fr}}
+.bin{border:0;border-radius:16px 16px 12px 12px;padding:12px 6px;min-height:84px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:700;color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.25)}
+.bin:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.bin .emo{font-size:1.7rem}
+.bin small{opacity:.85;font-weight:400}
+.bin.rec{background:#1E64B4}.bin.comp{background:#1F7A38}.bin.haz{background:#C2362F}.bin.gen{background:#4A4F4C}
+.gover{text-align:center;padding:10px 0}
+.gover .big{font:800 3rem/1 var(--head);color:var(--accent-text);margin:6px 0}
+.offnote{background:var(--warn-bg);color:var(--warn-ink);border-radius:14px;padding:10px 14px;margin:0 0 16px;font-size:.95rem}
+.keyrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.keyrow input{flex:1 1 220px;min-height:44px;border-radius:12px;border:2px solid var(--line-strong);background:var(--tile);padding:8px 12px}
+.aimode{display:inline-block;font-weight:700;background:var(--tile-on);color:var(--accent-text);border-radius:999px;padding:4px 12px;margin-bottom:6px}
+</style>
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip">Skip to main content</a>
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <div class="brand">
+        <svg viewBox="0 0 32 32" fill="none" stroke="#A8D5A2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22c0-9 7-15 20-16-1 13-7 20-16 20"/><path d="M6 26c4-6 9-10 14-13"/></svg>
+        <span data-i18n="brand">EcoLoop</span>
+      </div>
+      <button class="hbtn" id="langBtn" type="button"><span class="emo" aria-hidden="true">🌐</span><span id="langBtnText"></span></button>
+      <button class="hbtn" id="setBtn" type="button" aria-haspopup="dialog"><span class="emo" aria-hidden="true">⚙️</span><span data-i18n="settings">Settings</span></button>
+    </div>
+    <nav class="tabs" aria-label="Sections" data-i18n-aria="sections">
+      <button type="button" data-page="materials" aria-current="page"><span class="emo" aria-hidden="true">♻️</span> <span data-i18n="navMaterials">Materials</span></button>
+      <button type="button" data-page="tracker"><span class="emo" aria-hidden="true">📅</span> <span data-i18n="navTracker">My tracker</span></button>
+      <button type="button" data-page="play"><span class="emo" aria-hidden="true">🎮</span> <span data-i18n="navPlay">Quiz &amp; Play</span></button>
+    </nav>
+    <div id="heroMaterials">
+      <h1 data-i18n="h1">Give every object a second life.</h1>
+      <p class="lede" data-i18n="lede"></p>
+      <form class="search" id="searchForm" role="search">
+        <label for="q" class="sr" data-i18n="searchLabel">Search for an item or material</label>
+        <input id="q" type="search" autocomplete="off" data-i18n-ph="searchPh">
+        <button class="btn" id="askBtn" type="submit" data-i18n="ask">Ask the agent</button>
+      </form>
+      <p class="hint" id="hint"></p>
+    </div>
+    <div id="heroTracker" hidden>
+      <h1 data-i18n="trTitle">My recycling tracker</h1>
+      <p class="lede" data-i18n="trLede"></p>
+    </div>
+    <div id="heroPlay" hidden>
+      <h1 data-i18n="plTitle">Quiz &amp; Play</h1>
+      <p class="lede" data-i18n="plLede"></p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main" tabindex="-1">
+  <div id="page-materials">
+    <section class="panel" aria-labelledby="matsTitle">
+      <div class="grid-head"><h2 id="matsTitle" data-i18n="matsTitle">Choose a material</h2><p class="muted" id="matCount" style="margin:0"></p></div>
+      <ul class="grid" id="grid"></ul>
+      <p class="muted" id="empty" hidden data-i18n="noMatch"></p>
+    </section>
+    <section id="result" aria-live="polite" tabindex="-1"></section>
+  </div>
+  <div id="page-tracker" hidden></div>
+  <div id="page-play" hidden></div>
+</main>
+<footer data-i18n="footer"></footer>
+
+<div class="sr" aria-live="polite" id="announcer"></div>
+<div id="readerBar" class="readerbar" role="region" aria-label="Read aloud" hidden></div>
+
+<dialog id="viewer" aria-labelledby="vTitle">
+  <div class="dhead"><span class="emo" id="vEmoji" aria-hidden="true" style="font-size:1.8rem"></span><h2 id="vTitle"></h2><button class="x" type="button" data-close data-i18n-aria="close" aria-label="Close"><span aria-hidden="true">✕</span></button></div>
+  <div class="dbody">
+    <div class="vtabs" role="tablist" id="vtabs"></div>
+    <div id="vpanel" role="tabpanel" tabindex="0"></div>
+  </div>
+</dialog>
+
+<dialog id="settings" aria-labelledby="sTitle">
+  <div class="dhead"><span class="emo" aria-hidden="true" style="font-size:1.6rem">⚙️</span><h2 id="sTitle" data-i18n="sTitle">Settings</h2><button class="x" type="button" data-close data-i18n-aria="close" aria-label="Close"><span aria-hidden="true">✕</span></button></div>
+  <div class="dbody" id="setBody"></div>
+</dialog>
+<script>
+/* ===== MATERIALS (English + Arabic) =====
+   f = recommended format for [recycle, downcycle, upcycle idea 1, upcycle idea 2]
+   s = safety [level h/m/l, text]   r/d = [summary, steps]   u = upcycle ideas [title, steps]
+   st = stats [value, label]   p = benefits   g = UN goals                                   */
+const MATS = [
+{id:"pet",e:"🧴",f:["text","video","photo","video"],
+ en:{n:"Plastic bottle",m:"PET plastic (#1)",k:"plastic water soda bottle pet shampoo",
+  s:[["m","Bottles that held oil, bleach or chemicals go to hazardous waste, not recycling."],["l","Never heat or burn plastic when crafting — the fumes are harmful."]],
+  r:["PET is one of the most widely accepted plastics.",["Empty and rinse the bottle.","Keep or remove the cap as your local scheme asks.","Squash it lightly and put it in the plastics bin."]],
+  d:["Recycled PET often becomes fibre for fleece, carpets or insulation.",["Collect clean bottles in a bag.","Take them to a collection point that supplies fibre recyclers."]],
+  u:[["Self-watering planter",["Cut the bottle in half.","Thread a cotton strip through a hole in the cap.","Turn the top upside down into the base filled with water, then add soil and a seedling."]],["Drip irrigator",["Poke small holes in the cap.","Fill with water and push it upside down into the soil next to a plant."]]],
+  st:[["≈60%","less energy than making new PET"],["450+ yrs","a bottle can last in nature (estimate)"]],
+  p:["Keeps plastic out of seas, where it breaks into microplastics.","Cuts demand for oil, the raw material of new plastic.","Lowers greenhouse gas emissions."],g:"Supports UN Goals 12 and 14."},
+ ar:{n:"عبوة بلاستيكية",m:"بلاستيك PET (رقم 1)",k:"بلاستيك قنينة زجاجة ماء عبوة شامبو",
+  s:[["m","العبوات التي احتوت زيتًا أو كلورًا أو مواد كيميائية تُسلَّم كنفايات خطرة، لا للتدوير."],["l","لا تسخّن البلاستيك أو تحرقه أثناء الأعمال اليدوية، فأبخرته ضارة."]],
+  r:["بلاستيك PET من أكثر أنواع البلاستيك قبولًا في التدوير.",["أفرغ العبوة واشطفها.","أبقِ الغطاء أو انزعه حسب تعليمات منطقتك.","اضغطها قليلًا وضعها في حاوية البلاستيك."]],
+  d:["غالبًا يتحول PET المدوَّر إلى ألياف للصوف الصناعي والسجاد والعزل.",["اجمع العبوات النظيفة في كيس.","سلّمها لنقطة جمع تزوّد مصانع الألياف."]],
+  u:[["أصيص يسقي نفسه",["قصّ العبوة إلى نصفين.","مرّر شريطًا قطنيًا عبر ثقب في الغطاء.","اقلب الجزء العلوي داخل القاعدة المملوءة بالماء، ثم أضف التربة والشتلة."]],["أداة ري بالتنقيط",["اثقب الغطاء ثقوبًا صغيرة.","املأ العبوة بالماء واغرسها مقلوبة في التربة بجانب النبتة."]]],
+  st:[["≈60%","طاقة أقل من صنع PET جديد"],["+450 سنة","قد تبقى العبوة في الطبيعة (تقدير)"]],
+  p:["يمنع وصول البلاستيك إلى البحار حيث يتفتت إلى جزيئات دقيقة.","يقلل الطلب على النفط، المادة الخام للبلاستيك.","يخفض انبعاثات الغازات الدفيئة."],g:"يدعم هدفي الأمم المتحدة 12 و14."}},
+
+{id:"paper",e:"📄",f:["text","video","video","photo"],
+ en:{n:"Paper",m:"Paper fibre",k:"paper newspaper office magazine envelope notebook",
+  s:[["l","Shred documents with personal information before recycling."],["l","Shiny till receipts often contain BPA — put them in general waste."]],
+  r:["Office paper, newspapers and magazines are easy to recycle.",["Keep paper clean and dry.","Remove plastic sleeves and bindings.","Put it in the paper bin."]],
+  d:["Lower-grade paper becomes tissue, egg boxes or insulation.",["Keep mixed paper in a separate bag.","Use shredded paper as compost or packing filler."]],
+  u:[["Handmade paper",["Soak torn paper and blend it into pulp.","Spread the pulp over a mesh frame.","Press out the water and let it dry."]],["Paper-bead jewellery",["Cut long triangles from magazines.","Roll them around a skewer and glue the end.","Varnish and string into a bracelet."]]],
+  st:[["≈40%","less energy than making paper from trees"],["≈17","trees spared per tonne (common estimate)"]],
+  p:["Reduces cutting of forests.","Uses much less water and bleach.","Keeps paper out of landfill, where it releases methane."],g:"Supports UN Goal 15 (life on land)."},
+ ar:{n:"ورق",m:"ألياف ورقية",k:"ورق جرائد مكتب مجلة ظرف دفتر",
+  s:[["l","مزّق المستندات التي تحوي معلومات شخصية قبل تدويرها."],["l","إيصالات الشراء اللامعة تحتوي غالبًا مادة BPA، ضعها في النفايات العامة."]],
+  r:["ورق المكاتب والجرائد والمجلات سهل التدوير.",["حافظ على الورق نظيفًا وجافًا.","انزع الأغلفة البلاستيكية والتجليد.","ضعه في حاوية الورق."]],
+  d:["الورق منخفض الجودة يتحول إلى مناديل وكراتين بيض ومواد عزل.",["اجمع الورق المختلط في كيس منفصل.","استخدم الورق الممزق في السماد أو كحشوة للتغليف."]],
+  u:[["ورق مصنوع يدويًا",["انقع الورق الممزق واخلطه حتى يصبح عجينة.","افرد العجينة على إطار شبكي.","اعصر الماء واتركه ليجف."]],["خرز ورقي للإكسسوارات",["قصّ مثلثات طويلة من المجلات.","لفّها حول عود خشبي وألصق طرفها.","اطلها بالورنيش واصنع منها سوارًا."]]],
+  st:[["≈40%","طاقة أقل من صنع الورق من الأشجار"],["≈17","شجرة تُوفَّر لكل طن (تقدير شائع)"]],
+  p:["يقلل قطع الغابات.","يستهلك ماءً ومواد تبييض أقل بكثير.","يُبعد الورق عن المكبات حيث يطلق غاز الميثان."],g:"يدعم الهدف 15 للأمم المتحدة (الحياة في البر)."}},
+
+{id:"card",e:"📦",f:["text","video","photo","video"],
+ en:{n:"Cardboard box",m:"Corrugated cardboard",k:"cardboard box carton packaging delivery",
+  s:[["l","Remove staples and tape before crafting with children."],["l","Keep cardboard dry — wet board is often rejected."]],
+  r:["Clean, dry cardboard is accepted almost everywhere.",["Remove plastic tape and packing materials.","Flatten the box.","Keep it dry and put it in the cardboard bin."]],
+  d:["Worn fibres become egg boxes, paperboard or animal bedding.",["Shred plain cardboard.","Use it as garden mulch or worm-bin bedding."]],
+  u:[["Drawer organisers",["Cut boxes to the depth of your drawer.","Slot in dividers.","Cover with leftover paper."]],["Seed-starter tray",["Cut the board into small cells.","Fill with soil and seeds.","Plant the whole cell later — it breaks down in soil."]]],
+  st:[["≈24%","less energy than new board (estimate)"],["5–7×","fibres can be recycled before they wear out"]],
+  p:["Saves trees and the water used to make pulp.","Avoids methane from cardboard in landfill.","Shredded board improves garden soil."],g:"Supports UN Goal 15 (life on land)."},
+ ar:{n:"صندوق كرتون",m:"كرتون مموج",k:"كرتون صندوق علبة تغليف طرد",
+  s:[["l","انزع الدبابيس والشريط اللاصق قبل العمل مع الأطفال."],["l","حافظ على الكرتون جافًا، فالكرتون المبلل يُرفض غالبًا."]],
+  r:["الكرتون النظيف والجاف مقبول في كل مكان تقريبًا.",["انزع الشريط البلاستيكي ومواد التغليف.","افرد الصندوق وسطّحه.","أبقه جافًا وضعه في حاوية الكرتون."]],
+  d:["الألياف المستهلكة تتحول إلى كراتين بيض وورق مقوّى وفرشة للحيوانات.",["مزّق الكرتون العادي.","استخدمه غطاءً لتربة الحديقة أو فرشة لصندوق الديدان."]],
+  u:[["منظّم للأدراج",["قصّ الصناديق بعمق الدرج.","أدخل فواصل بينها.","غلّفها بورق متبقٍّ."]],["صينية لإنبات البذور",["قصّ الكرتون إلى خلايا صغيرة.","املأها بالتربة والبذور.","ازرع الخلية كاملة لاحقًا، فهي تتحلل في التربة."]]],
+  st:[["≈24%","طاقة أقل من صنع كرتون جديد (تقدير)"],["5–7 مرات","يمكن تدوير الألياف قبل أن تتلف"]],
+  p:["يوفر الأشجار والماء المستخدم لصنع اللب.","يتجنب الميثان الناتج عن الكرتون في المكبات.","الكرتون الممزق يحسّن تربة الحديقة."],g:"يدعم الهدف 15 للأمم المتحدة (الحياة في البر)."}},
+
+{id:"pizza",e:"🍕",f:["text","video","photo","video"],
+ en:{n:"Pizza box",m:"Cardboard with food grease",k:"pizza box greasy takeaway",
+  s:[["l","Grease and cheese spoil paper recycling — separate the dirty parts first."],["l","Remove leftover food so the box doesn't attract pests."]],
+  r:["The clean lid usually recycles; the greasy base usually doesn't.",["Scrape off food scraps.","Tear off the clean parts and flatten them.","Put clean parts in the cardboard bin."]],
+  d:["Greasy cardboard is a good carbon-rich compost ingredient.",["Tear the greasy parts into small pieces.","Add them to home compost or the food-waste bin."]],
+  u:[["Board game or art canvas",["Use the clean inside of the lid.","Draw or paint a board game on it."]],["Solar oven experiment",["Cut a flap in the lid and line it with foil.","Cover the opening with clear plastic.","Point it at the sun to warm food."]]],
+  st:[["≈3 bn","pizza boxes used in the US each year (estimate)"],["≈24%","energy saved by recycling cardboard"]],
+  p:["Composting greasy parts avoids landfill methane.","Clean parts become new boxes, saving trees.","Good sorting stops whole loads of recycling being rejected."],g:"Supports UN Goal 12."},
+ ar:{n:"علبة بيتزا",m:"كرتون عليه دهون طعام",k:"بيتزا علبة دهون طلب خارجي",
+  s:[["l","الدهون والجبن تُفسد تدوير الورق، افصل الأجزاء المتسخة أولًا."],["l","أزل بقايا الطعام حتى لا تجذب الحشرات."]],
+  r:["الغطاء النظيف يُدوَّر عادةً، أما القاعدة الدهنية فلا.",["أزل بقايا الطعام.","مزّق الأجزاء النظيفة وسطّحها.","ضع الأجزاء النظيفة في حاوية الكرتون."]],
+  d:["الكرتون الدهني مكوّن ممتاز وغني بالكربون للسماد.",["مزّق الأجزاء الدهنية قطعًا صغيرة.","أضفها إلى السماد المنزلي أو حاوية بقايا الطعام."]],
+  u:[["لعبة لوحية أو لوحة رسم",["استخدم الجهة الداخلية النظيفة للغطاء.","ارسم عليها لعبة لوحية أو لوحة فنية."]],["تجربة فرن شمسي",["قصّ نافذة في الغطاء وبطّنها بورق الألمنيوم.","غطِّ الفتحة ببلاستيك شفاف.","وجّهها نحو الشمس لتدفئة الطعام."]]],
+  st:[["≈3 مليارات","علبة بيتزا تُستخدم في أمريكا سنويًا (تقدير)"],["≈24%","طاقة موفَّرة بتدوير الكرتون"]],
+  p:["تسميد الأجزاء الدهنية يتجنب ميثان المكبات.","الأجزاء النظيفة تصبح صناديق جديدة وتوفر الأشجار.","الفرز الجيد يمنع رفض شحنات التدوير كاملة."],g:"يدعم الهدف 12 للأمم المتحدة."}},
+
+{id:"banana",e:"🍌",f:["text","video","video","text"],
+ en:{n:"Banana peel",m:"Organic food waste",k:"banana peel food scraps compost organic fruit vegetable",
+  s:[["l","Keep meat, dairy and oily food out of home compost — they attract pests."],["l","Wash non-organic peels before using them on edible plants."]],
+  r:["Food waste is recycled by composting.",["Collect scraps in a caddy with a lid.","Chop peels small so they break down faster.","Add to home compost or the food-waste collection."]],
+  d:["Biogas plants turn food scraps into energy and fertiliser.",["Use the municipal food-waste bin where available."]],
+  u:[["Banana-peel plant fertiliser",["Soak peels in water for 2–3 days.","Strain the liquid.","Water potted plants with it."]],["Shoe and leaf polish",["Rub the inside of the peel on leather shoes or dusty leaves.","Buff with a soft cloth."]]],
+  st:[["≈8–10%","of global emissions come from wasted food"],["≈25×","methane's warming power compared with CO₂"]],
+  p:["Composting avoids methane from landfill.","Returns nutrients to soil instead of chemical fertiliser.","Helps soil hold water — valuable in dry climates."],g:"Supports UN Goals 2 and 13."},
+ ar:{n:"قشر موز",m:"بقايا طعام عضوية",k:"موز قشر بقايا طعام سماد عضوي فاكهة خضار",
+  s:[["l","لا تضع اللحوم والألبان والطعام الدهني في السماد المنزلي، فهي تجذب الحشرات."],["l","اغسل القشور غير العضوية قبل استخدامها لنباتات الأكل."]],
+  r:["تُدوَّر بقايا الطعام عن طريق التسميد.",["اجمع البقايا في وعاء له غطاء.","قطّع القشور صغيرًا لتتحلل أسرع.","أضفها إلى السماد المنزلي أو حاوية بقايا الطعام."]],
+  d:["محطات الغاز الحيوي تحول بقايا الطعام إلى طاقة وسماد.",["استخدم حاوية بقايا الطعام البلدية إن وُجدت."]],
+  u:[["سماد قشر الموز للنباتات",["انقع القشور في الماء يومين إلى ثلاثة.","صفِّ السائل.","اسقِ به نباتات الأصص."]],["ملمّع للأحذية والأوراق",["افرك باطن القشرة على الأحذية الجلدية أو الأوراق المغبرة.","لمّعها بقطعة قماش ناعمة."]]],
+  st:[["≈8–10%","من الانبعاثات العالمية سببها هدر الطعام"],["≈25 ضعفًا","قوة الميثان في التسخين مقارنة بثاني أكسيد الكربون"]],
+  p:["التسميد يتجنب الميثان من المكبات.","يعيد المغذيات للتربة بدل الأسمدة الكيميائية.","يساعد التربة على حفظ الماء، وهذا مهم في المناخ الجاف."],g:"يدعم هدفي الأمم المتحدة 2 و13."}},
+
+{id:"batt",e:"🔋",f:["text","video","text"],
+ en:{n:"Battery",m:"Lithium, alkaline or lead-acid",k:"battery batteries lithium aa power bank",
+  s:[["h","Tape the ends of lithium and 9 V batteries — short circuits cause fires."],["h","Swollen or leaking batteries: don't touch with bare hands; keep in sand or a metal tin and hand in quickly."],["m","Never put batteries in household bins."]],
+  r:["Every battery type should go to a battery collection point.",["Tape the terminals.","Store in a cool, dry, non-metal box.","Drop at a battery collection point."]],
+  d:["Old car batteries can be reused for solar energy storage before recycling.",["Ask car dealers or solar companies about second-life programmes."]],
+  u:[["Switch to rechargeables",["Replace disposable batteries with rechargeable ones.","Recycle them at the end of their life."]]],
+  st:[["up to 95%","of lithium, cobalt and nickel can be recovered"],["1000s","of waste-truck fires each year blamed on batteries"]],
+  p:["Keeps heavy metals out of groundwater.","Prevents fires in waste trucks and plants.","Recovered metals reduce mining."],g:"Supports UN Goals 7 and 12."},
+ ar:{n:"بطارية",m:"ليثيوم أو قلوية أو رصاص حمضية",k:"بطارية بطاريات ليثيوم شاحن متنقل",
+  s:[["h","ضع شريطًا لاصقًا على أطراف بطاريات الليثيوم و9 فولت، فالتماس الكهربائي يسبب الحرائق."],["h","البطاريات المنتفخة أو المسرّبة: لا تلمسها بيد عارية، احفظها في رمل أو علبة معدنية وسلّمها سريعًا."],["m","لا تضع البطاريات أبدًا في سلة النفايات المنزلية."]],
+  r:["كل أنواع البطاريات تُسلَّم إلى نقاط جمع البطاريات.",["غطِّ الأطراف بشريط لاصق.","احفظها في صندوق غير معدني بارد وجاف.","سلّمها إلى نقطة جمع البطاريات."]],
+  d:["بطاريات السيارات القديمة يمكن إعادة استخدامها لتخزين الطاقة الشمسية قبل تدويرها.",["اسأل وكالات السيارات أو شركات الطاقة الشمسية عن برامج الاستخدام الثاني."]],
+  u:[["استخدم البطاريات القابلة للشحن",["استبدل البطاريات التي تُرمى ببطاريات قابلة للشحن.","دوّرها في نهاية عمرها."]]],
+  st:[["حتى 95%","من الليثيوم والكوبالت والنيكل يمكن استرجاعه"],["الآلاف","من حرائق شاحنات النفايات سنويًا سببها البطاريات"]],
+  p:["يمنع وصول المعادن الثقيلة إلى المياه الجوفية.","يمنع الحرائق في شاحنات ومصانع النفايات.","المعادن المسترجعة تقلل التعدين."],g:"يدعم هدفي الأمم المتحدة 7 و12."}},
+
+{id:"jar",e:"🫙",f:["text","video","photo","video"],
+ en:{n:"Glass jar",m:"Soda-lime glass",k:"glass jar pickle jam",
+  s:[["m","Wear gloves when handling chipped glass."],["l","Window glass, Pyrex, mirrors and ceramics don't belong in the bottle bank."]],
+  r:["Glass can be recycled endlessly without losing quality.",["Rinse and remove the lid.","Recycle the metal lid separately.","Put the jar in the glass bank."]],
+  d:["Glass that can't be remelted is crushed into sand for roads or water filters.",["Take mixed glass to a recycling centre that accepts it for aggregate."]],
+  u:[["Storage jars and lanterns",["Soak to remove the label.","Use for dry foods, or add a tea-light and a wire handle."]],["Terrarium",["Layer gravel, charcoal and soil.","Add small succulents or moss.","Close the lid loosely."]]],
+  st:[["≈2–3%","energy saved for every 10% recycled glass used"],["100%","recyclable, again and again"]],
+  p:["Recycled glass replaces raw sand and minerals.","Melts at lower heat, cutting CO₂.","Reduces quarrying and landfill."],g:"Supports UN Goal 12."},
+ ar:{n:"مرطبان زجاجي",m:"زجاج صودا الجير",k:"زجاج مرطبان قطرميز مخلل مربى",
+  s:[["m","ارتدِ قفازات عند التعامل مع الزجاج المكسور الحواف."],["l","زجاج النوافذ والبايركس والمرايا والخزف لا تُوضع في حاوية الزجاجات."]],
+  r:["يمكن تدوير الزجاج بلا نهاية دون أن تقل جودته.",["اشطفه وانزع الغطاء.","دوّر الغطاء المعدني وحده.","ضع المرطبان في حاوية الزجاج."]],
+  d:["الزجاج الذي لا يمكن صهره يُطحن إلى رمل للطرق أو فلاتر المياه.",["سلّم الزجاج المختلط لمركز تدوير يقبله للطحن."]],
+  u:[["مرطبانات تخزين وفوانيس",["انقعه لإزالة الملصق.","استخدمه للأطعمة الجافة، أو أضف شمعة صغيرة ومقبضًا من السلك."]],["حديقة زجاجية (تيراريوم)",["ضع طبقات من الحصى والفحم والتربة.","أضف نباتات عصارية صغيرة أو طحالب.","أغلق الغطاء بشكل خفيف."]]],
+  st:[["≈2–3%","طاقة موفّرة لكل 10% زجاج مدوَّر يُستخدم"],["100%","قابل للتدوير مرة بعد مرة"]],
+  p:["الزجاج المدوَّر يحل محل الرمل والمعادن الخام.","ينصهر بحرارة أقل فيقل ثاني أكسيد الكربون.","يقلل المحاجر والمكبات."],g:"يدعم الهدف 12 للأمم المتحدة."}},
+
+{id:"can",e:"🥫",f:["text","video","photo","video"],
+ en:{n:"Drink can",m:"Aluminium or steel",k:"aluminium aluminum can soda drink tin food can steel foil",
+  s:[["m","Cut edges are razor sharp — wear gloves and smooth the edges when crafting."],["l","Aerosol cans must be completely empty; never pierce or heat them."]],
+  r:["Cans are among the most valuable items to recycle.",["Empty and rinse the can.","Check whether your area wants cans crushed or not.","Put it in the metals bin."]],
+  d:["Mixed metal scrap is melted into car parts and building metal.",["Collect cans and clean foil together.","Sell or give them to a scrap-metal dealer."]],
+  u:[["Pencil holder or herb pot",["Remove the top with a smooth-edge opener.","Punch drainage holes and paint it.","Plant herbs or store pens."]],["Wind chime",["Cut strips with tin snips while wearing gloves.","Curl and drill them.","Hang from a branch with string."]]],
+  st:[["≈95%","less energy than making new aluminium"],["60 days","for a recycled can to be back on the shelf"]],
+  p:["Avoids bauxite mining that clears forests.","Huge energy savings mean far less CO₂.","Metal recycles forever without losing quality."],g:"Supports UN Goal 13 (climate action)."},
+ ar:{n:"علبة مشروب",m:"ألمنيوم أو فولاذ",k:"ألمنيوم علبة مشروب غازي تنك معلبات فولاذ قصدير",
+  s:[["m","الحواف المقصوصة حادة جدًا، ارتدِ قفازات ونعّم الحواف أثناء العمل."],["l","علب البخاخات يجب أن تكون فارغة تمامًا، ولا تثقبها أو تسخنها أبدًا."]],
+  r:["العلب من أثمن المواد في التدوير.",["أفرغ العلبة واشطفها.","تأكد هل تطلب منطقتك سحق العلب أم لا.","ضعها في حاوية المعادن."]],
+  d:["خردة المعادن المختلطة تُصهر لصنع قطع السيارات ومعادن البناء.",["اجمع العلب ورقائق الألمنيوم النظيفة معًا.","بعها أو أعطها لتاجر الخردة."]],
+  u:[["حامل أقلام أو أصيص أعشاب",["انزع الغطاء بفتّاحة تترك حوافًا ناعمة.","اثقب فتحات تصريف ولوّنها.","ازرع الأعشاب أو ضع فيها الأقلام."]],["أجراس رياح",["قصّ شرائط بمقص المعادن مع ارتداء القفازات.","اثنها واثقبها.","علّقها على غصن بخيط."]]],
+  st:[["≈95%","طاقة أقل من صنع ألمنيوم جديد"],["60 يومًا","لتعود العلبة المدوَّرة إلى الرف"]],
+  p:["يتجنب تعدين البوكسيت الذي يزيل الغابات.","توفير هائل للطاقة يعني ثاني أكسيد كربون أقل بكثير.","المعدن يُدوَّر للأبد دون أن يفقد جودته."],g:"يدعم الهدف 13 للأمم المتحدة (العمل المناخي)."}},
+
+{id:"bag",e:"🛍️",f:["text","video","video","photo"],
+ en:{n:"Plastic bag",m:"Soft plastic film",k:"plastic bag carrier film wrap shopping nylon",
+  s:[["m","Keep bags away from babies and young children — suffocation risk."],["m","Don't put bags in mixed recycling unless allowed; they jam sorting machines."]],
+  r:["Soft plastic is recycled through supermarket drop-off points.",["Make sure bags are clean and dry.","Bundle several bags inside one bag.","Drop them at a soft-plastic collection point."]],
+  d:["Collected film becomes plastic lumber, benches and bin liners.",["Choose benches and decking made from recycled plastic."]],
+  u:[["Plarn (plastic yarn) weaving",["Flatten bags and cut them into loops.","Link the loops into a long yarn.","Crochet a mat or tote bag."]],["Fused-plastic pouch",["Layer bags between baking paper.","Iron in a well-aired room — don't breathe the fumes.","Sew the sheet into a pouch."]]],
+  st:[["≈12 min","typical use time of a single-use bag"],["100s of yrs","to break into microplastics"]],
+  p:["Protects sea animals and livestock from swallowing plastic.","Keeps litter out of drains that cause flooding.","Reuse cuts demand for fossil-fuel plastic."],g:"Supports UN Goal 14 (life below water)."},
+ ar:{n:"كيس بلاستيك",m:"غشاء بلاستيكي رقيق",k:"كيس بلاستيك نايلون تسوق أكياس",
+  s:[["m","أبعد الأكياس عن الرضّع والأطفال الصغار لخطر الاختناق."],["m","لا تضع الأكياس في حاوية التدوير المختلطة إلا إذا سُمح بذلك، فهي تعطّل آلات الفرز."]],
+  r:["البلاستيك الرقيق يُدوَّر عبر نقاط الجمع في المتاجر الكبرى.",["تأكد أن الأكياس نظيفة وجافة.","اجمع عدة أكياس داخل كيس واحد.","سلّمها لنقطة جمع البلاستيك الرقيق."]],
+  d:["الأكياس المجمّعة تتحول إلى أخشاب بلاستيكية ومقاعد وأكياس نفايات.",["اختر المقاعد والأرضيات المصنوعة من بلاستيك مدوَّر."]],
+  u:[["نسج خيوط من الأكياس",["سطّح الأكياس وقصّها إلى حلقات.","اربط الحلقات لتصنع خيطًا طويلًا.","احِك منها سجادة أو حقيبة."]],["حقيبة من البلاستيك المكوي",["ضع طبقات من الأكياس بين ورق الخَبز.","اكوِها في غرفة جيدة التهوية دون استنشاق الأبخرة.","اخِط القطعة لتصبح حقيبة صغيرة."]]],
+  st:[["≈12 دقيقة","مدة الاستخدام المعتادة لكيس الاستخدام الواحد"],["مئات السنين","حتى يتفتت إلى جزيئات بلاستيكية دقيقة"]],
+  p:["يحمي الحيوانات البحرية والمواشي من ابتلاع البلاستيك.","يُبعد النفايات عن المصارف التي تسبب الفيضانات.","إعادة الاستخدام تقلل الطلب على بلاستيك النفط."],g:"يدعم الهدف 14 للأمم المتحدة (الحياة تحت الماء)."}},
+
+{id:"phone",e:"📱",f:["text","video","text","photo"],
+ en:{n:"Old phone or charger",m:"Electronics (metals and plastics)",k:"phone charger laptop electronic e-waste cable computer mobile",
+  s:[["h","Never open, crush or pierce lithium batteries — they can catch fire."],["h","Don't burn cables or circuit boards to get metal: the smoke is toxic."],["m","Back up and factory-reset devices to erase your personal data."]],
+  r:["E-waste must go to an electronics collection point, not the bin.",["Back up and wipe the device.","Remove the SIM and memory cards.","Hand it to an e-waste centre or the shop's take-back scheme."]],
+  d:["Parts are separated; plastics become lower-grade products and metals are refined.",["Give working chargers and cables to repair shops.","Send the rest to an e-waste recycler."]],
+  u:[["Old phone as a home tool",["Wipe it and reinstall the system.","Use it as a music player, alarm clock or security camera."]],["Circuit-board art",["Use only boards with the battery removed.","Wear gloves and mount pieces as coasters or wall art."]]],
+  st:[["≈100×","more gold per tonne in phones than in gold ore"],["≈22%","of world e-waste was properly recycled (2022)"]],
+  p:["Recovers gold, copper and rare metals without new mining.","Keeps lead and mercury out of soil and water.","Reuse avoids the high emissions of making new devices."],g:"Supports UN Goals 3 and 12."},
+ ar:{n:"هاتف أو شاحن قديم",m:"إلكترونيات (معادن وبلاستيك)",k:"هاتف جوال موبايل شاحن حاسوب لابتوب إلكترونيات كيبل",
+  s:[["h","لا تفتح بطاريات الليثيوم أو تسحقها أو تثقبها، فقد تشتعل."],["h","لا تحرق الأسلاك أو اللوحات الإلكترونية لاستخراج المعادن، فدخانها سام."],["m","انسخ بياناتك احتياطيًا وأعد ضبط المصنع لحذف معلوماتك الشخصية."]],
+  r:["النفايات الإلكترونية تُسلَّم لنقطة جمع خاصة، لا لسلة النفايات.",["انسخ بياناتك احتياطيًا وامسح الجهاز.","أخرج شريحة الاتصال وبطاقة الذاكرة.","سلّمه لمركز النفايات الإلكترونية أو برنامج الاسترجاع في المتجر."]],
+  d:["تُفصل القطع؛ البلاستيك يصبح منتجات أقل جودة والمعادن تُكرَّر.",["أعطِ الشواحن والأسلاك الصالحة لمحلات الصيانة.","أرسل الباقي لمدوِّر إلكترونيات."]],
+  u:[["الهاتف القديم كأداة منزلية",["امسحه وأعد تثبيت النظام.","استخدمه مشغّلًا للموسيقى أو منبّهًا أو كاميرا مراقبة."]],["فن من اللوحات الإلكترونية",["استخدم فقط اللوحات بعد إزالة البطارية.","ارتدِ القفازات واصنع منها قواعد أكواب أو لوحات جدارية."]]],
+  st:[["≈100 ضعف","ذهب في كل طن من الهواتف مقارنة بخام الذهب"],["≈22%","من النفايات الإلكترونية في العالم دُوِّرت بشكل سليم (2022)"]],
+  p:["يسترجع الذهب والنحاس والمعادن النادرة دون تعدين جديد.","يُبعد الرصاص والزئبق عن التربة والمياه.","إعادة الاستخدام تتجنب انبعاثات صنع أجهزة جديدة."],g:"يدعم هدفي الأمم المتحدة 3 و12."}},
+
+{id:"bulb",e:"💡",f:["text","video","video"],
+ en:{n:"Light bulb",m:"Glass and metal; energy-saving bulbs contain mercury",k:"light bulb lamp cfl led fluorescent tube",
+  s:[["h","Energy-saving (CFL) bulbs and tubes contain mercury. If one breaks: air the room for 15 minutes, don't vacuum, and pick up pieces with card and tape into a sealed jar."],["m","Never put CFL or LED bulbs in the bin — they are hazardous e-waste."],["m","Only ever craft with old filament bulbs, never with energy-saving ones."]],
+  r:["CFL and LED bulbs are recycled at lamp collection points.",["Let the bulb cool and wrap it so it doesn't break.","Take it to a lamp or e-waste collection point.","Check local rules for old filament bulbs."]],
+  d:["Recyclers recover the glass, metal caps and mercury separately.",["Just deliver bulbs intact — the rest is done at special facilities."]],
+  u:[["Mini bulb vase (filament bulbs only)",["Wear gloves and safety glasses.","Carefully remove the base and filament with pliers.","Glue on a small stand, add water and a flower."]]],
+  st:[["≈4 mg","of mercury in a typical CFL, captured when recycled"],["≈80%","less electricity using LED bulbs"]],
+  p:["Keeps mercury out of soil, water and air.","Recovers glass and metal.","Switching to LED cuts household energy use."],g:"Supports UN Goals 3 and 7."},
+ ar:{n:"مصباح كهربائي",m:"زجاج ومعدن، والمصابيح الموفّرة تحتوي زئبقًا",k:"مصباح لمبة إضاءة موفّرة ليد نيون فلورسنت",
+  s:[["h","المصابيح الموفّرة وأنابيب النيون تحتوي زئبقًا. إذا انكسر أحدها: هوِّ الغرفة 15 دقيقة، ولا تستخدم المكنسة الكهربائية، والتقط القطع بكرتون وشريط لاصق في مرطبان مغلق."],["m","لا ترمِ المصابيح الموفّرة أو مصابيح LED في سلة النفايات، فهي نفايات إلكترونية خطرة."],["m","استخدم في الأعمال اليدوية المصابيح القديمة ذات الفتيل فقط، ولا تستخدم الموفّرة أبدًا."]],
+  r:["المصابيح الموفّرة ومصابيح LED تُدوَّر في نقاط جمع خاصة.",["اترك المصباح يبرد ولفّه حتى لا ينكسر.","سلّمه لنقطة جمع المصابيح أو النفايات الإلكترونية.","تحقّق من تعليمات منطقتك للمصابيح القديمة ذات الفتيل."]],
+  d:["مراكز التدوير تسترجع الزجاج والقواعد المعدنية والزئبق كلٌّ على حدة.",["سلّم المصابيح سليمة فقط، والباقي يتم في منشآت خاصة."]],
+  u:[["مزهرية صغيرة من المصباح (ذو الفتيل فقط)",["ارتدِ قفازات ونظارات واقية.","انزع القاعدة والفتيل بحذر باستخدام الزرادية.","ألصق قاعدة صغيرة وأضف ماءً وزهرة."]]],
+  st:[["≈4 ملغ","زئبق في المصباح الموفّر يُلتقط عند تدويره"],["≈80%","كهرباء أقل عند استخدام مصابيح LED"]],
+  p:["يُبعد الزئبق عن التربة والماء والهواء.","يسترجع الزجاج والمعدن.","التحول إلى LED يقلل استهلاك الطاقة في المنزل."],g:"يدعم هدفي الأمم المتحدة 3 و7."}},
+
+{id:"eps",e:"🥤",f:["text","video","photo","video"],
+ en:{n:"Polystyrene cup",m:"Expanded polystyrene foam (#6)",k:"polystyrene styrofoam foam cup takeaway packaging",
+  s:[["m","Don't microwave, heat or burn polystyrene — it releases harmful fumes."],["l","Rinse off drink and food; dirty foam is rarely accepted."]],
+  r:["Rarely accepted in normal bins; special foam drop-offs take clean foam.",["Rinse and dry the cup.","Remove the lid and straw.","Find a foam drop-off point; otherwise put it in general waste."]],
+  d:["Clean foam is pressed into blocks and made into picture frames and mouldings.",["Collect clean packaging foam in bags and deliver it in bulk."]],
+  u:[["Seed-starter cups",["Poke drainage holes in the base.","Fill with compost and sow seeds."]],["Printing stamps",["Cut flat foam pieces.","Press a design into them with a pencil.","Print with paint."]]],
+  st:[["≈95%","of foam is air, so it takes huge space in landfill"],["500+ yrs","to break down (estimate)"]],
+  p:["Stops light foam blowing into water and breaking into beads animals eat.","Saves landfill space.","Encourages reusable cups."],g:"Supports UN Goal 14."},
+ ar:{n:"كوب فلين",m:"بوليسترين رغوي (رقم 6)",k:"فلين ستايروفوم كوب رغوي تغليف طلب خارجي",
+  s:[["m","لا تضع الفلين في الميكروويف ولا تسخّنه أو تحرقه، فهو يطلق أبخرة ضارة."],["l","اشطف بقايا المشروب والطعام، فالفلين المتسخ نادرًا ما يُقبل."]],
+  r:["نادرًا ما يُقبل في الحاويات العادية، لكن نقاط جمع الفلين تقبل النظيف منه.",["اشطف الكوب وجففه.","انزع الغطاء والشفاطة.","ابحث عن نقطة جمع للفلين، وإلا فضعه في النفايات العامة."]],
+  d:["الفلين النظيف يُضغط إلى قوالب ويُصنع منه إطارات صور وحواف زخرفية.",["اجمع فلين التغليف النظيف في أكياس وسلّمه بكميات كبيرة."]],
+  u:[["أكواب لإنبات البذور",["اثقب فتحات تصريف في القاعدة.","املأها بالسماد وازرع البذور."]],["أختام للطباعة",["قصّ قطعًا مسطحة من الفلين.","ارسم عليها تصميمًا بالضغط بقلم رصاص.","اطبع بها باستخدام الألوان."]]],
+  st:[["≈95%","من الفلين هواء، لذا يشغل مساحة كبيرة في المكبات"],["+500 سنة","حتى يتحلل (تقدير)"]],
+  p:["يمنع تطاير الفلين إلى المياه وتفتته إلى حبيبات تأكلها الحيوانات.","يوفر مساحة المكبات.","يشجّع على استخدام الأكواب القابلة لإعادة الاستخدام."],g:"يدعم الهدف 14 للأمم المتحدة."}},
+
+{id:"cloth",e:"👕",f:["text","video","video","photo"],
+ en:{n:"Old clothes",m:"Mixed fibres",k:"clothes textile shirt jeans shoes",
+  s:[["l","Wash items before donating or crafting."],["l","Mouldy or chemical-stained clothes shouldn't be donated."]],
+  r:["Clothing banks sort items for reuse first, then fibre recycling.",["Wash and dry the clothes.","Tie pairs of shoes together.","Drop at a clothing bank or charity."]],
+  d:["Worn fabric is shredded into insulation, stuffing or cleaning rags.",["Cut unwearable cotton into cleaning rags.","Give stained items to animal shelters as bedding."]],
+  u:[["T-shirt tote bag",["Cut off the sleeves and widen the neck.","Turn it inside out.","Knot or sew the bottom closed."]],["Denim pouch or cushion",["Cut squares from old jeans.","Sew them into a pouch or cushion cover."]]],
+  st:[["≈2,700 L","of water to make one cotton T-shirt"],["≈85%","of textiles end up landfilled or burned (estimate)"]],
+  p:["Making clothes last longer is the biggest saving of all.","Reduces water use and dye pollution.","Keeps synthetic fibres out of landfill."],g:"Supports UN Goals 6 and 12."},
+ ar:{n:"ملابس قديمة",m:"ألياف مختلطة",k:"ملابس قميص بنطال جينز أحذية منسوجات",
+  s:[["l","اغسل الملابس قبل التبرع بها أو استخدامها في الأعمال اليدوية."],["l","لا تتبرع بملابس عليها عفن أو بقع مواد كيميائية."]],
+  r:["حاويات الملابس تفرز القطع لإعادة الاستخدام أولًا، ثم لتدوير الألياف.",["اغسل الملابس وجففها.","اربط كل زوج أحذية معًا.","سلّمها لحاوية الملابس أو جمعية خيرية."]],
+  d:["القماش المستهلك يُمزّق ليصبح عزلًا أو حشوة أو قطع تنظيف.",["قصّ القطن غير الصالح للبس إلى قطع للتنظيف.","أعطِ القطع المبقعة لملاجئ الحيوانات كفرشة."]],
+  u:[["حقيبة من قميص قطني",["قصّ الأكمام ووسّع فتحة الرقبة.","اقلبه على الوجه الآخر.","اربط الأسفل أو اخِطه."]],["حقيبة صغيرة أو غطاء وسادة من الجينز",["قصّ مربعات من الجينز القديم.","اخِطها لتصبح حقيبة صغيرة أو غطاء وسادة."]]],
+  st:[["≈2,700 لتر","ماء لصنع قميص قطني واحد"],["≈85%","من المنسوجات ينتهي بها الأمر في المكب أو الحرق (تقدير)"]],
+  p:["إطالة عمر الملابس هي أكبر توفير على الإطلاق.","يقلل استهلاك الماء وتلوث الأصباغ.","يُبعد الألياف الصناعية عن المكبات."],g:"يدعم هدفي الأمم المتحدة 6 و12."}},
+
+{id:"med",e:"💊",f:["text","text","photo"],
+ en:{n:"Old medicine",m:"Medicines and packaging",k:"medicine pills drugs expired tablets pharmacy syrup",
+  s:[["h","Never flush medicines or pour them down the sink — they pollute water."],["h","Keep old medicine locked away from children and pets until disposal."],["m","Needles go in a sharps container, never loose in bins."]],
+  r:["Unused medicine goes back to a pharmacy or health centre.",["Keep pills in their original packaging.","Return them to a pharmacy or official collection point.","Recycle the clean cardboard box separately."]],
+  d:["Collected medicines are destroyed safely at high temperature, often producing energy.",["This is done by licensed facilities — your part is returning them safely."]],
+  u:[["Empty pill bottles as organisers",["Use only fully empty, washed bottles.","Remove labels with personal details.","Store beads, screws or travel spices."]]],
+  st:[["≈1 in 4","river sites studied had unsafe drug levels (2022)"],["104","countries where medicines were found in rivers"]],
+  p:["Protects fish and water life from hormones and antibiotics.","Slows the spread of antibiotic resistance.","Prevents accidental poisoning at home."],g:"Supports UN Goals 3 and 6."},
+ ar:{n:"أدوية قديمة",m:"أدوية وعبواتها",k:"دواء أدوية حبوب منتهية الصلاحية صيدلية شراب",
+  s:[["h","لا ترمِ الأدوية في المرحاض أو المغسلة أبدًا، فهي تلوث المياه."],["h","احفظ الأدوية القديمة بعيدًا عن الأطفال والحيوانات الأليفة حتى التخلص منها."],["m","الإبر توضع في حاوية الأدوات الحادة، لا في سلة النفايات."]],
+  r:["الأدوية غير المستخدمة تُعاد إلى الصيدلية أو المركز الصحي.",["أبقِ الحبوب في عبوتها الأصلية.","أعدها إلى صيدلية أو نقطة جمع رسمية.","دوّر علبة الكرتون النظيفة وحدها."]],
+  d:["الأدوية المجمّعة تُتلف بأمان على حرارة عالية، وغالبًا تُنتج منها طاقة.",["تقوم بذلك منشآت مرخصة، ودورك هو إعادتها بأمان."]],
+  u:[["علب الحبوب الفارغة كمنظّمات",["استخدم فقط العلب الفارغة تمامًا والمغسولة.","انزع الملصقات التي عليها معلوماتك الشخصية.","خزّن فيها الخرز أو البراغي أو بهارات السفر."]]],
+  st:[["≈1 من كل 4","مواقع أنهار دُرست فيها مستويات أدوية غير آمنة (2022)"],["104","دولة وُجدت أدوية في أنهارها"]],
+  p:["يحمي الأسماك والحياة المائية من الهرمونات والمضادات الحيوية.","يبطئ انتشار مقاومة المضادات الحيوية.","يمنع التسمم العرضي في المنزل."],g:"يدعم هدفي الأمم المتحدة 3 و6."}},
+
+{id:"carton",e:"🧃",f:["text","video","photo","video"],
+ en:{n:"Juice carton",m:"Paperboard with plastic and aluminium layers",k:"juice carton milk tetra pak drink box",
+  s:[["l","Rinse out milk and juice — leftovers smell and attract pests."],["l","Push the straw inside or remove it."]],
+  r:["Cartons are accepted in many schemes and separated at special mills.",["Empty and rinse.","Flatten the carton.","Put it in mixed recycling or a carton bank."]],
+  d:["Mills pulp the paper; the plastic-aluminium layer becomes roofing sheets and boards.",["Recycle through schemes that send cartons to specialist mills."]],
+  u:[["Bird feeder",["Cut windows on two sides.","Push a stick through as a perch.","Fill with seeds and hang it up."]],["Seedling pots",["Cut the carton in half and poke drainage holes.","Fill with compost and sow seeds."]]],
+  st:[["≈75%","of a carton is paperboard by weight"],["≈1 in 4","cartons are recycled worldwide"]],
+  p:["Recovers long, strong paper fibres.","Saves trees and pulping energy.","Keeps mixed packaging out of landfill."],g:"Supports UN Goal 12."},
+ ar:{n:"علبة عصير",m:"كرتون بطبقات من البلاستيك والألمنيوم",k:"عصير علبة كرتون حليب تتراباك",
+  s:[["l","اشطف بقايا الحليب والعصير، فهي تسبب روائح وتجذب الحشرات."],["l","أدخل الشفاطة داخل العلبة أو انزعها."]],
+  r:["العلب الكرتونية مقبولة في كثير من برامج التدوير وتُفصل في مصانع خاصة.",["أفرغها واشطفها.","سطّح العلبة.","ضعها في حاوية التدوير المختلطة أو حاوية العلب."]],
+  d:["المصانع تحول الورق إلى لب، وطبقة البلاستيك والألمنيوم تصبح ألواح أسقف.",["دوّرها عبر برامج ترسل العلب إلى مصانع متخصصة."]],
+  u:[["مغذّية للطيور",["قصّ نافذتين على جانبين.","أدخل عودًا ليقف عليه الطائر.","املأها بالبذور وعلّقها."]],["أصص للشتلات",["قصّ العلبة نصفين واثقب فتحات تصريف.","املأها بالسماد وازرع البذور."]]],
+  st:[["≈75%","من وزن العلبة كرتون"],["≈1 من كل 4","علب تُدوَّر في العالم"]],
+  p:["يسترجع ألياف ورق طويلة وقوية.","يوفر الأشجار وطاقة صنع اللب.","يُبعد التغليف المختلط عن المكبات."],g:"يدعم الهدف 12 للأمم المتحدة."}},
+
+{id:"tea",e:"🍵",f:["text","video","text","video"],
+ en:{n:"Tea bag or coffee grounds",m:"Organic waste (some tea bags contain plastic)",k:"tea bag coffee grounds pods capsule",
+  s:[["l","Many tea bags contain plastic — tear them open and compost only the leaves if unsure."],["l","Coffee capsules need special capsule-recycling schemes."]],
+  r:["Grounds and tea leaves belong in compost.",["Let them cool.","Empty tea bags that may contain plastic.","Add the leaves and grounds to compost."]],
+  d:["Food-waste plants turn grounds into biogas and fertiliser.",["Use the food-waste collection where available."]],
+  u:[["Garden booster and fridge deodoriser",["Dry the grounds on a tray.","Sprinkle thinly around plants, or keep a bowl in the fridge to absorb smells."]],["Grow oyster mushrooms",["Mix fresh grounds with mushroom spawn in a bag.","Keep it dark and damp.","Harvest in a few weeks."]]],
+  st:[["≈2 bn","cups of coffee drunk worldwide each day"],["≈2%","nitrogen in grounds — a useful plant nutrient"]],
+  p:["Composting avoids landfill methane.","Adds nutrients and structure to soil.","Plastic-free tea bags avoid microplastics."],g:"Supports UN Goal 13."},
+ ar:{n:"أكياس شاي أو تفل قهوة",m:"نفايات عضوية (بعض أكياس الشاي فيها بلاستيك)",k:"شاي كيس قهوة تفل كبسولات",
+  s:[["l","كثير من أكياس الشاي تحتوي بلاستيكًا، افتحها وسمّد الأوراق فقط إن لم تكن متأكدًا."],["l","كبسولات القهوة تحتاج برامج تدوير خاصة بها."]],
+  r:["تفل القهوة وأوراق الشاي مكانها السماد.",["اتركها تبرد.","أفرغ أكياس الشاي التي قد تحتوي بلاستيكًا.","أضف الأوراق والتفل إلى السماد."]],
+  d:["منشآت بقايا الطعام تحول التفل إلى غاز حيوي وسماد.",["استخدم حاوية بقايا الطعام إن وُجدت."]],
+  u:[["مقوٍّ للحديقة ومزيل لروائح الثلاجة",["جفّف التفل على صينية.","انثره بخفة حول النباتات، أو ضع وعاءً منه في الثلاجة لامتصاص الروائح."]],["زراعة فطر المحار",["اخلط التفل الطازج مع بذور الفطر في كيس.","احفظه في مكان مظلم ورطب.","اقطفه بعد بضعة أسابيع."]]],
+  st:[["≈2 مليار","كوب قهوة يُشرب يوميًا في العالم"],["≈2%","نيتروجين في التفل، وهو مغذٍّ مفيد للنبات"]],
+  p:["التسميد يتجنب ميثان المكبات.","يضيف مغذيات ويحسّن بنية التربة.","أكياس الشاي الخالية من البلاستيك تتجنب الجزيئات البلاستيكية الدقيقة."],g:"يدعم الهدف 13 للأمم المتحدة."}},
+
+{id:"tissue",e:"🤧",f:["text","text","photo"],
+ en:{n:"Used tissue",m:"Short paper fibres",k:"tissue napkin paper towel kitchen roll",
+  s:[["m","Used tissues may carry germs — bag them and wash your hands."],["l","Tissues with make-up, chemicals or from illness go in general waste."]],
+  r:["Tissue can't be recycled — its fibres are too short and it's unhygienic.",["Don't put tissues in paper recycling.","Compost clean ones; bag the rest for general waste."]],
+  d:["Clean tissues and napkins (water or food only) are good for compost.",["Tear them into small pieces.","Add to compost with food scraps."]],
+  u:[["Switch to cloth handkerchiefs",["Cut old cotton shirts into squares and hem them.","Wash hot after use."]]],
+  st:[["Last stop","tissue is the final life of recycled paper"],["Compostable","clean tissue returns to the soil"]],
+  p:["Composting clean tissue avoids landfill methane.","Cloth alternatives reduce demand for new pulp.","Buying recycled tissue keeps paper in use longer."],g:"Supports UN Goal 15."},
+ ar:{n:"مناديل مستعملة",m:"ألياف ورقية قصيرة",k:"مناديل محارم فاين منشفة ورقية",
+  s:[["m","المناديل المستعملة قد تحمل جراثيم، ضعها في كيس واغسل يديك."],["l","المناديل التي عليها مكياج أو مواد كيميائية أو استُخدمت أثناء المرض توضع في النفايات العامة."]],
+  r:["المناديل لا تُدوَّر، فأليافها قصيرة جدًا وهي غير صحية.",["لا تضع المناديل في حاوية الورق.","سمّد النظيفة منها، وضع الباقي في كيس للنفايات العامة."]],
+  d:["المناديل النظيفة (عليها ماء أو طعام فقط) مفيدة للسماد.",["مزّقها قطعًا صغيرة.","أضفها إلى السماد مع بقايا الطعام."]],
+  u:[["استخدم مناديل قماشية",["قصّ قمصانًا قطنية قديمة إلى مربعات وخِط أطرافها.","اغسلها بماء ساخن بعد الاستخدام."]]],
+  st:[["المحطة الأخيرة","المناديل هي آخر حياة للورق المدوَّر"],["قابلة للتسميد","المناديل النظيفة تعود إلى التربة"]],
+  p:["تسميد المناديل النظيفة يتجنب ميثان المكبات.","البدائل القماشية تقلل الطلب على اللب الجديد.","شراء مناديل مدوَّرة يُبقي الورق قيد الاستخدام أطول."],g:"يدعم الهدف 15 للأمم المتحدة."}},
+
+{id:"paint",e:"🎨",f:["text","video","photo"],
+ en:{n:"Paint or chemicals",m:"Hazardous household waste",k:"paint chemicals solvent bleach cleaner oil pesticide thinner",
+  s:[["h","Never pour paint, solvents or chemicals down drains or onto soil."],["h","Never mix chemicals — bleach and ammonia together make toxic gas."],["m","Keep products in their labelled containers with lids closed; work in fresh air."]],
+  r:["Chemicals and oil-based paint go to a hazardous-waste site.",["Close containers tightly and keep the labels on.","Carry them upright in a box.","Drop at a hazardous-waste point; empty, dry metal tins can go in metal recycling."]],
+  d:["Leftover water-based paint can be remixed into recycled paint.",["Give usable paint to schools, charities or paint-reuse schemes.","Let small amounts of water-based paint dry before disposal, if allowed."]],
+  u:[["Use leftovers for small projects",["Paint planters, birdhouses or old furniture.","Share leftover tins with neighbours or schools."]]],
+  st:[["≈10%","of paint bought is never used (estimate)"],["0","chemicals should ever reach drains or soil"]],
+  p:["Protects groundwater, rivers and wildlife from toxic runoff.","Keeps water-treatment plants working properly.","Reusing paint saves the resources used to make it."],g:"Supports UN Goals 3 and 6."},
+ ar:{n:"دهان أو مواد كيميائية",m:"نفايات منزلية خطرة",k:"دهان طلاء مواد كيميائية تنر كلور منظفات زيت مبيدات",
+  s:[["h","لا تسكب الدهان أو المذيبات أو المواد الكيميائية في المصارف أو على التربة أبدًا."],["h","لا تخلط المواد الكيميائية أبدًا، فالكلور مع الأمونيا يُنتج غازًا سامًا."],["m","أبقِ المنتجات في عبواتها الأصلية الموسومة ومغلقة، واعمل في مكان جيد التهوية."]],
+  r:["المواد الكيميائية والدهانات الزيتية تُسلَّم لموقع النفايات الخطرة.",["أغلق العبوات بإحكام وأبقِ الملصقات عليها.","انقلها واقفة داخل صندوق.","سلّمها لنقطة النفايات الخطرة، وعلب المعدن الفارغة والجافة تُدوَّر مع المعادن."]],
+  d:["الدهان المائي المتبقي يمكن خلطه ليصبح دهانًا مدوَّرًا.",["أعطِ الدهان الصالح للمدارس أو الجمعيات.","اترك الكميات الصغيرة من الدهان المائي تجف قبل التخلص منها إن كان ذلك مسموحًا."]],
+  u:[["استخدم البقايا في مشاريع صغيرة",["لوّن الأصص أو بيوت الطيور أو الأثاث القديم.","شارك العلب المتبقية مع الجيران أو المدارس."]]],
+  st:[["≈10%","من الدهان المشترى لا يُستخدم أبدًا (تقدير)"],["0","مواد كيميائية يجب أن تصل إلى المصارف أو التربة"]],
+  p:["يحمي المياه الجوفية والأنهار والحياة البرية من التلوث السام.","يحافظ على عمل محطات معالجة المياه.","إعادة استخدام الدهان توفر الموارد اللازمة لصنعه."],g:"يدعم هدفي الأمم المتحدة 3 و6."}},
+
+/* ---------- New materials ---------- */
+{id:"jift",e:"🫒",f:["text","video","video","text"],
+ en:{n:"Jift (olive pomace)",m:"Olive pits, skins and pulp from olive mills",k:"jift jeft olive pomace mill olive oil press pits zibar",
+  s:[["h","Never burn jift in a closed room or tent — it produces carbon monoxide, which can kill without warning. Use only in a stove with a chimney and keep a window open."],["h","Olive-mill wastewater (zibar) is toxic to soil and water — never dump it on land or in valleys."],["m","Store jift dry; damp piles can heat up, ferment and grow mould."]],
+  r:["Return jift to the olive mill or a pomace processor, where leftover oil is extracted.",["Ask your olive mill where its jift goes.","Collect it in sacks while fresh.","Deliver it to a pomace-oil factory or a jift-briquette maker."]],
+  d:["Jift is pressed into fuel briquettes for winter heating — a traditional use in Jordan and Palestine.",["Dry the jift in the sun.","Press it into blocks or buy ready-made briquettes.","Burn only in a vented stove with a chimney."]],
+  u:[["Compost and soil improver",["Mix jift with manure and green waste (about 1 part jift to 3 parts other material).","Turn the pile every two weeks and keep it moist.","Use the finished compost after 3–4 months."]],["Activated carbon and garden mulch",["Ground olive pits can be made into activated carbon for water filters by specialised factories.","At home, spread aged, composted jift thinly as mulch around trees."]]],
+  st:[["≈35–40%","of the olives' weight is left as pomace (estimate)"],["0 L","of zibar should ever reach soil or valleys"]],
+  p:["Turns a major Mediterranean farm waste into heat, oil and fertiliser.","Replaces some diesel and wood for heating.","Prevents pollution of soil and groundwater from olive-mill waste."],g:"Supports UN Goals 7, 12 and 15."},
+ ar:{n:"جفت الزيتون",m:"بذور وقشور ولب الزيتون من المعاصر",k:"جفت زيتون معصرة زيت زيت الزيتون زيبار نوى",
+  s:[["h","لا تحرق الجفت أبدًا في غرفة مغلقة أو خيمة، فهو يُطلق أول أكسيد الكربون الذي قد يقتل دون إنذار. استخدمه فقط في مدفأة لها مدخنة وأبقِ النافذة مفتوحة."],["h","مياه المعاصر (الزيبار) سامة للتربة والمياه، فلا تسكبها أبدًا على الأرض أو في الأودية."],["m","خزّن الجفت جافًا، فالأكوام الرطبة قد تسخن وتتخمر وتتعفن."]],
+  r:["أعد الجفت إلى المعصرة أو مصنع معالجة الجفت حيث يُستخرج الزيت المتبقي.",["اسأل المعصرة إلى أين يذهب الجفت.","اجمعه في أكياس وهو طازج.","سلّمه لمصنع زيت الجفت أو صانع قوالب الجفت."]],
+  d:["يُضغط الجفت إلى قوالب وقود للتدفئة في الشتاء، وهو استخدام تقليدي في الأردن وفلسطين.",["جفّف الجفت تحت الشمس.","اضغطه إلى قوالب أو اشترِ قوالب جاهزة.","أحرقه فقط في مدفأة لها مدخنة وتهوية."]],
+  u:[["سماد ومحسّن للتربة",["اخلط الجفت مع روث الحيوانات والمخلفات الخضراء (جزء جفت لكل 3 أجزاء من غيره تقريبًا).","قلّب الكومة كل أسبوعين وأبقها رطبة.","استخدم السماد الناضج بعد 3 إلى 4 أشهر."]],["فحم نشط وغطاء للتربة",["نوى الزيتون المطحون يمكن أن تحوله مصانع متخصصة إلى فحم نشط لفلاتر المياه.","في المنزل، انثر الجفت المسمّد القديم بطبقة رقيقة حول الأشجار."]]],
+  st:[["≈35–40%","من وزن الزيتون يبقى جفتًا (تقدير)"],["0 لتر","من الزيبار يجب أن يصل إلى التربة أو الأودية"]],
+  p:["يحوّل نفاية زراعية كبيرة في المتوسط إلى تدفئة وزيت وسماد.","يحل محل جزء من السولار والحطب في التدفئة.","يمنع تلوث التربة والمياه الجوفية بمخلفات المعاصر."],g:"يدعم أهداف الأمم المتحدة 7 و12 و15."}},
+
+{id:"fabric",e:"🧵",f:["text","video","video","photo"],
+ en:{n:"Extra fabric",m:"Fabric offcuts and scraps",k:"fabric scraps offcuts tailor sewing cloth leftover textile",
+  s:[["l","Keep scissors and pins in a closed box when working with children."],["l","Don't burn synthetic scraps — they melt and release harmful fumes."]],
+  r:["Large clean pieces can go to textile banks; tiny scraps usually can't.",["Sort scraps by size and fibre (cotton, wool, polyester).","Bag clean pieces bigger than a hand.","Give them to a textile bank, tailor or school art department."]],
+  d:["Small scraps are shredded into stuffing, insulation and industrial wipes.",["Collect tiny scraps in a pillowcase.","Use them as stuffing for cushions, pet beds or soft toys."]],
+  u:[["Patchwork bag or quilt",["Cut scraps into equal squares.","Sew them together into a panel.","Make a tote bag, cushion or quilt."]],["Fabric gift wrap and hair ties",["Hem square pieces to wrap gifts Japanese-style (furoshiki).","Sew thin strips into scrunchies."]]],
+  st:[["≈15%","of fabric is cut off and wasted in clothes making (estimate)"],["≈2,700 L","of water behind one cotton T-shirt"]],
+  p:["Saves the water and energy already used to make the fabric.","Keeps synthetic fibres out of landfill.","Supports local tailors and creative small businesses."],g:"Supports UN Goals 8 and 12."},
+ ar:{n:"قماش زائد",m:"قصاصات وبقايا القماش",k:"قماش قصاصات بقايا خياط خياطة منسوجات",
+  s:[["l","احفظ المقصات والدبابيس في علبة مغلقة عند العمل مع الأطفال."],["l","لا تحرق القصاصات الصناعية، فهي تذوب وتطلق أبخرة ضارة."]],
+  r:["القطع الكبيرة النظيفة تُقبل في حاويات الملابس، أما القصاصات الصغيرة فلا غالبًا.",["افرز القصاصات حسب الحجم والنوع (قطن، صوف، بوليستر).","ضع القطع النظيفة الأكبر من كف اليد في كيس.","أعطها لحاوية الملابس أو خياط أو قسم الفنون في المدرسة."]],
+  d:["القصاصات الصغيرة تُمزق لتصبح حشوة وعزلًا ومناديل تنظيف صناعية.",["اجمع القصاصات الصغيرة في كيس وسادة.","استخدمها حشوة للوسائد أو فرش الحيوانات أو الألعاب القماشية."]],
+  u:[["حقيبة أو لحاف من الرقع",["قصّ القصاصات إلى مربعات متساوية.","اخِطها معًا لتصنع قطعة كبيرة.","اصنع منها حقيبة أو وسادة أو لحافًا."]],["تغليف هدايا وربطات شعر من القماش",["خِط أطراف قطع مربعة لتغليف الهدايا بالطريقة اليابانية (فوروشيكي).","اخِط الشرائط الرفيعة لتصبح ربطات شعر."]]],
+  st:[["≈15%","من القماش يُقص ويُهدر أثناء صنع الملابس (تقدير)"],["≈2,700 لتر","ماء خلف قميص قطني واحد"]],
+  p:["يوفر الماء والطاقة المستهلكة أصلًا في صنع القماش.","يُبعد الألياف الصناعية عن المكبات.","يدعم الخياطين المحليين والمشاريع الإبداعية الصغيرة."],g:"يدعم هدفي الأمم المتحدة 8 و12."}},
+
+{id:"pcup",e:"☕",f:["text","text","photo","video"],
+ en:{n:"Paper cup",m:"Paperboard with a thin plastic lining",k:"paper cup coffee cup disposable takeaway",
+  s:[["l","Paper cups are lined with plastic — they don't go in normal paper recycling unless your area says so."],["l","Remove plastic lids and sleeves first."]],
+  r:["Only special cup-recycling bins and mills can separate the plastic lining.",["Empty and shake out the cup.","Remove the plastic lid (recycle it with plastics if accepted).","Use a dedicated cup-recycling bin; otherwise put it in general waste."]],
+  d:["Separated paper fibre becomes packaging, card and paper bags.",["Look for coffee shops with cup-recycling bins."]],
+  u:[["Seedling pots",["Poke a hole in the base.","Fill with soil and sow seeds.","Remove the cup when planting out."]],["Kids' craft figures",["Paint cups as animals or characters.","Use them for counting games or a puppet show."]]],
+  st:[["≈1 in 400","paper cups recycled in some countries (estimate)"],["≈250 bn","paper cups used worldwide each year (estimate)"]],
+  p:["Choosing a reusable cup avoids most of the waste.","Special recycling saves wood fibre.","Keeps plastic linings from breaking into microplastics."],g:"Supports UN Goal 12."},
+ ar:{n:"كوب ورقي",m:"كرتون مبطّن بطبقة بلاستيك رقيقة",k:"كوب ورقي قهوة كاسات استخدام واحد",
+  s:[["l","الأكواب الورقية مبطنة بالبلاستيك، فلا تُوضع في حاوية الورق العادية إلا إذا سمحت منطقتك بذلك."],["l","انزع الأغطية والأكمام البلاستيكية أولًا."]],
+  r:["فقط حاويات ومصانع خاصة بالأكواب تستطيع فصل البطانة البلاستيكية.",["أفرغ الكوب وانفضه.","انزع الغطاء البلاستيكي (ودوّره مع البلاستيك إن كان مقبولًا).","استخدم حاوية خاصة بالأكواب، وإلا فضعه في النفايات العامة."]],
+  d:["الألياف الورقية المفصولة تصبح تغليفًا وكرتونًا وأكياسًا ورقية.",["ابحث عن المقاهي التي فيها حاويات لتدوير الأكواب."]],
+  u:[["أصص للشتلات",["اثقب القاعدة.","املأه بالتربة وازرع البذور.","انزع الكوب عند نقل الشتلة إلى الأرض."]],["مجسمات للأطفال",["لوّن الأكواب على شكل حيوانات أو شخصيات.","استخدمها لألعاب العد أو مسرح الدمى."]]],
+  st:[["≈1 من كل 400","كوب ورقي يُدوَّر في بعض الدول (تقدير)"],["≈250 مليار","كوب ورقي يُستخدم في العالم سنويًا (تقدير)"]],
+  p:["اختيار كوب قابل لإعادة الاستخدام يتجنب معظم النفايات.","التدوير الخاص يوفر ألياف الخشب.","يمنع تفتت البطانة البلاستيكية إلى جزيئات دقيقة."],g:"يدعم الهدف 12 للأمم المتحدة."}},
+
+{id:"straw",e:"🧋",f:["text","text","photo","video"],
+ en:{n:"Straw and cup lid",m:"Plastic straws (#5 PP) and lids (#5 PP or #6 PS)",k:"straw straws lid cup lid drinking straw plastic straw bubble tea",
+  s:[["m","Straws and lids are a choking hazard for babies, young children and pets — keep them out of reach."],["m","Don't burn or melt straws and lids — the fumes are harmful."],["l","\"Compostable\" PLA straws only break down in industrial compost, not at home or in nature."]],
+  r:["Straws are too small for most sorting machines; some lids can be recycled if your area accepts their plastic number.",["Rinse the lid and check the number in the recycling triangle.","Put lids marked 5 in the plastics bin if your area accepts #5.","Put used straws in general waste — never on the ground, where they reach the sea."]],
+  d:["Clean straws and lids collected in bulk can be shredded into low-grade plastic items like plant pots.",["Collect clean straws and lids in a bottle or jar of the same plastic type.","Give them to a school or community plastic-recycling project that shreds plastic."]],
+  u:[["Straw building kit or art",["Wash and dry straws well.","Cut them into different lengths.","Join them with tape or pipe cleaners to build shapes, or glue them in patterns for a mosaic picture."]],["Lid mosaic or game counters",["Collect lids of different colours.","Glue them onto board to make a mosaic, or use them as counters for games and maths lessons."]]],
+  st:[["Top 10","item found in beach clean-ups worldwide"],["≈20 min","typical time a straw is used"]],
+  p:["Keeps small plastic out of the sea, where turtles and birds swallow it.","Saying no to straws and choosing reusable metal, glass or bamboo straws stops the waste at the start.","Reusing lids and straws cuts demand for new oil-based plastic."],g:"Supports UN Goals 12 and 14."},
+ ar:{n:"شفاطة وغطاء كوب",m:"شفاطات بلاستيكية (PP رقم 5) وأغطية (PP رقم 5 أو PS رقم 6)",k:"شفاطة شفاطات مصاصة قشة غطاء غطاء كوب بلاستيك بابل تي",
+  s:[["m","الشفاطات والأغطية قد تسبب الاختناق للرضّع والأطفال الصغار والحيوانات الأليفة، أبعدها عن متناولهم."],["m","لا تحرق الشفاطات والأغطية أو تُذبها، فأبخرتها ضارة."],["l","الشفاطات القابلة للتحلل (PLA) تتحلل فقط في منشآت السماد الصناعية، وليس في المنزل أو الطبيعة."]],
+  r:["الشفاطات صغيرة جدًا لمعظم آلات الفرز، وبعض الأغطية يمكن تدويرها إذا كانت منطقتك تقبل رقم بلاستيكها.",["اشطف الغطاء وابحث عن الرقم داخل مثلث التدوير.","ضع الأغطية التي تحمل رقم 5 في حاوية البلاستيك إذا كانت منطقتك تقبله.","ضع الشفاطات المستعملة في النفايات العامة، ولا ترمها على الأرض حيث تصل إلى البحر."]],
+  d:["الشفاطات والأغطية النظيفة المجمّعة بكميات يمكن فرمها لصنع منتجات بلاستيكية بسيطة مثل أصص النباتات.",["اجمع الشفاطات والأغطية النظيفة داخل عبوة أو مرطبان من نوع البلاستيك نفسه.","سلّمها لمدرسة أو مشروع مجتمعي يفرم البلاستيك لإعادة تدويره."]],
+  u:[["مجموعة بناء أو فن من الشفاطات",["اغسل الشفاطات وجففها جيدًا.","قصّها بأطوال مختلفة.","اربطها بشريط لاصق أو أسلاك منظفات الأنابيب لبناء أشكال، أو ألصقها بنقوش لعمل لوحة فسيفساء."]],["فسيفساء أو قطع ألعاب من الأغطية",["اجمع أغطية بألوان مختلفة.","ألصقها على لوح لصنع فسيفساء، أو استخدمها قطعًا للألعاب ودروس الرياضيات."]]],
+  st:[["من أكثر 10","مواد تُجمع في حملات تنظيف الشواطئ حول العالم"],["≈20 دقيقة","مدة استخدام الشفاطة عادةً"]],
+  p:["يُبعد البلاستيك الصغير عن البحر حيث تبتلعه السلاحف والطيور.","رفض الشفاطة واختيار شفاطات معدنية أو زجاجية أو من الخيزران يمنع النفايات من البداية.","إعادة استخدام الأغطية والشفاطات تقلل الطلب على بلاستيك النفط الجديد."],g:"يدعم هدفي الأمم المتحدة 12 و14."}},
+
+{id:"cutlery",e:"🍴",f:["text","text","photo","photo"],
+ en:{n:"Plastic spoons and forks",m:"Polystyrene or polypropylene (#6 or #5)",k:"plastic spoon fork knife cutlery disposable",
+  s:[["l","Broken plastic cutlery has sharp edges — keep it away from young children."],["l","Don't heat or melt plastic cutlery for crafts."]],
+  r:["Plastic cutlery is usually too small and mixed to recycle.",["Wash and reuse it as many times as you can.","Check if your area accepts #5 plastic.","Otherwise put it in general waste — never in nature."]],
+  d:["Where collected, it is shredded into low-grade plastic items like plant pots.",["Collect clean cutlery in bulk for schools or community recycling projects."]],
+  u:[["Garden plant markers",["Write plant names on the spoon bowl with a marker.","Push the handle into the soil."]],["Spoon art: flower mirror or lamp",["Cut off the handles with strong scissors (adult only).","Glue the spoon heads in rings around a mirror or jar like petals.","Paint them."]]],
+  st:[["≈40 bn","plastic utensils thrown away in the US yearly (estimate)"],["a few minutes","typical use before they're thrown away"]],
+  p:["Reusing cutlery cuts demand for oil-based plastic.","Keeps small plastic pieces out of seas and animal stomachs.","Encourages switching to metal or wooden cutlery."],g:"Supports UN Goals 12 and 14."},
+ ar:{n:"ملاعق وشوك بلاستيكية",m:"بوليسترين أو بولي بروبيلين (رقم 6 أو 5)",k:"ملعقة شوكة سكين بلاستيك أدوات مائدة استخدام واحد",
+  s:[["l","أدوات المائدة البلاستيكية المكسورة لها حواف حادة، أبعدها عن الأطفال الصغار."],["l","لا تسخّن أو تُذب البلاستيك في الأعمال اليدوية."]],
+  r:["أدوات المائدة البلاستيكية غالبًا صغيرة ومختلطة جدًا للتدوير.",["اغسلها وأعد استخدامها قدر الإمكان.","تحقّق هل تقبل منطقتك البلاستيك رقم 5.","وإلا فضعها في النفايات العامة، ولا ترمها في الطبيعة أبدًا."]],
+  d:["حيث تُجمع، تُفرم لتصبح منتجات بلاستيكية بسيطة مثل أصص النباتات.",["اجمع الأدوات النظيفة بكميات للمدارس أو مشاريع التدوير المجتمعية."]],
+  u:[["لافتات لنباتات الحديقة",["اكتب أسماء النباتات على رأس الملعقة بقلم ثابت.","اغرز المقبض في التربة."]],["فن الملاعق: مرآة أو مصباح على شكل زهرة",["اقطع المقابض بمقص قوي (يقوم بذلك شخص بالغ).","ألصق رؤوس الملاعق بحلقات حول مرآة أو مرطبان مثل البتلات.","لوّنها."]]],
+  st:[["≈40 مليار","أداة بلاستيكية تُرمى في أمريكا سنويًا (تقدير)"],["دقائق قليلة","مدة الاستخدام قبل رميها"]],
+  p:["إعادة الاستخدام تقلل الطلب على بلاستيك النفط.","تُبعد القطع البلاستيكية الصغيرة عن البحار وبطون الحيوانات.","تشجّع على استخدام أدوات معدنية أو خشبية."],g:"يدعم هدفي الأمم المتحدة 12 و14."}},
+
+{id:"glass",e:"🍾",f:["text","video","video","photo"],
+ en:{n:"Glass bottles and broken glass",m:"Bottle glass, plus window and drinking glass",k:"glass bottle broken glass window drinking glass cup",
+  s:[["h","Never pick up broken glass with bare hands — wear thick gloves and use a dustpan."],["m","Wrap broken glass in newspaper or a box, label it GLASS, and protect waste collectors."],["m","Cutting bottles needs eye protection and adult supervision."]],
+  r:["Bottle glass recycles endlessly; drinking glasses and window glass usually can't go in the bottle bank.",["Rinse bottles and remove caps.","Put bottles in the glass bank.","Wrap broken drinking or window glass safely and put it in general waste or a construction-waste point."]],
+  d:["Mixed glass is crushed into sand for roads, sandblasting or water filters.",["Take large amounts of mixed glass to a recycling centre that crushes glass."]],
+  u:[["Bottle drinking glasses or lamps",["Score the bottle with a bottle cutter (wear safety glasses).","Separate with hot and cold water.","Sand the edge until perfectly smooth."]],["Glass mosaic",["Use tumbled, smooth glass pieces only.","Set them in tile adhesive on a pot or tray.","Fill gaps with grout."]]],
+  st:[["≈30%","less energy when melting recycled glass vs raw materials (estimate)"],["1 million yrs","for a glass bottle to break down in nature (estimate)"]],
+  p:["Saves sand, a resource that is being over-mined worldwide.","Lower furnace heat means less CO₂.","Keeps sharp waste away from people and animals."],g:"Supports UN Goals 11 and 12."},
+ ar:{n:"زجاجات وزجاج مكسور",m:"زجاج القناني وزجاج النوافذ والكاسات",k:"زجاج قنينة زجاجة مكسور نافذة كاسة كوب",
+  s:[["h","لا تلتقط الزجاج المكسور بيد عارية أبدًا، ارتدِ قفازات سميكة واستخدم المجرفة."],["m","لُفّ الزجاج المكسور بالجرائد أو ضعه في صندوق واكتب عليه زجاج لحماية عمال النظافة."],["m","قصّ الزجاجات يحتاج نظارات واقية وإشراف شخص بالغ."]],
+  r:["زجاج القناني يُدوَّر بلا نهاية، أما كاسات الشرب وزجاج النوافذ فلا توضع غالبًا في حاوية القناني.",["اشطف القناني وانزع أغطيتها.","ضع القناني في حاوية الزجاج.","لُفّ زجاج الكاسات أو النوافذ المكسور بأمان وضعه في النفايات العامة أو نقطة مخلفات البناء."]],
+  d:["الزجاج المختلط يُطحن إلى رمل للطرق أو التنظيف بالرمل أو فلاتر المياه.",["سلّم الكميات الكبيرة من الزجاج المختلط لمركز تدوير يطحن الزجاج."]],
+  u:[["كاسات أو مصابيح من القناني",["احفر خطًا على القنينة بأداة قص الزجاجات (مع نظارات واقية).","افصلها بالماء الساخن ثم البارد.","انعم الحافة بورق الصنفرة حتى تصبح ناعمة تمامًا."]],["فسيفساء زجاجية",["استخدم فقط قطع زجاج ناعمة الحواف.","ثبّتها بلاصق البلاط على أصيص أو صينية.","املأ الفراغات بالروبة."]]],
+  st:[["≈30%","طاقة أقل عند صهر الزجاج المدوَّر مقارنة بالمواد الخام (تقدير)"],["مليون سنة","حتى تتحلل القنينة الزجاجية في الطبيعة (تقدير)"]],
+  p:["يوفر الرمل، وهو مورد يُستنزف عالميًا.","حرارة أفران أقل تعني ثاني أكسيد كربون أقل.","يُبعد النفايات الحادة عن الناس والحيوانات."],g:"يدعم هدفي الأمم المتحدة 11 و12."}},
+
+{id:"acc",e:"💍",f:["text","text","photo","photo"],
+ en:{n:"Accessories",m:"Jewellery, sunglasses, belts, watches and bags",k:"accessories jewellery jewelry earrings necklace bracelet sunglasses belt watch bag",
+  s:[["m","Costume jewellery may contain lead or nickel — wash hands after handling and keep it away from small children."],["m","Watch batteries (button cells) are dangerous if swallowed — remove and recycle them safely."]],
+  r:["Precious metals are always valuable; other accessories are best reused.",["Take gold and silver to a jeweller to be refined.","Recycle watch batteries at a battery point.","Donate wearable items to charity shops."]],
+  d:["Broken pieces are taken apart: metals go for scrap, leather and fabric for stuffing.",["Separate metal parts and give them to a scrap dealer.","Remove beads and stones for craft use."]],
+  u:[["Remake into new jewellery",["Take broken necklaces apart.","Restring beads into bracelets or keyrings.","Add old charms to bags or zips."]],["Belt and bag makeovers",["Turn an old belt into a handle for a basket or a pet collar.","Use bag straps as plant hangers."]]],
+  st:[["≈30 t","of mining waste for one gold ring (estimate)"],["100%","of gold and silver can be refined again"]],
+  p:["Reusing metals avoids destructive mining.","Keeps lead and nickel out of soil.","Creative reuse supports local crafts."],g:"Supports UN Goals 12 and 15."},
+ ar:{n:"إكسسوارات",m:"مجوهرات ونظارات شمسية وأحزمة وساعات وحقائب",k:"إكسسوارات مجوهرات حلق عقد قلادة سوار أسوارة نظارات حزام ساعة حقيبة",
+  s:[["m","المجوهرات المقلدة قد تحتوي رصاصًا أو نيكلًا، اغسل يديك بعد لمسها وأبعدها عن الأطفال الصغار."],["m","بطاريات الساعات (الزر) خطيرة جدًا إذا ابتُلعت، انزعها ودوّرها بأمان."]],
+  r:["المعادن الثمينة لها قيمة دائمًا، والإكسسوارات الأخرى يُفضل إعادة استخدامها.",["خذ الذهب والفضة إلى الصائغ لإعادة تكريرها.","دوّر بطاريات الساعات في نقطة جمع البطاريات.","تبرّع بالقطع الصالحة للاستخدام لمحلات الجمعيات الخيرية."]],
+  d:["القطع المكسورة تُفكك: المعادن للخردة، والجلد والقماش للحشوة.",["افصل الأجزاء المعدنية وأعطها لتاجر الخردة.","انزع الخرز والأحجار لاستخدامها في الأعمال اليدوية."]],
+  u:[["صنع مجوهرات جديدة",["فكّك القلائد المكسورة.","أعد نظم الخرز لصنع أساور أو ميداليات مفاتيح.","أضف الحلي القديمة إلى الحقائب أو السحابات."]],["تجديد الأحزمة والحقائب",["حوّل الحزام القديم إلى مقبض لسلة أو طوق لحيوان أليف.","استخدم أحزمة الحقائب لتعليق النباتات."]]],
+  st:[["≈30 طنًا","من مخلفات التعدين لصنع خاتم ذهب واحد (تقدير)"],["100%","من الذهب والفضة يمكن تكريره من جديد"]],
+  p:["إعادة استخدام المعادن تتجنب التعدين المدمّر.","تُبعد الرصاص والنيكل عن التربة.","إعادة الاستخدام الإبداعية تدعم الحرف المحلية."],g:"يدعم هدفي الأمم المتحدة 12 و15."}}
+];
+/* ===== UI TEXT (English + Arabic) ===== */
+const STR = {
+en:{dir:"ltr",locale:"en-GB",other:"العربية",otherLang:"ar",
+ brand:"EcoLoop",skip:"Skip to main content",settings:"Settings",sections:"Sections",navMaterials:"Materials",navTracker:"My tracker",
+ h1:"Give every object a second life.",
+ lede:"Pick a material or describe any item. EcoLoop checks safety first, then shows how to recycle, downcycle or upcycle it, and what that does for the planet.",
+ searchLabel:"Search for an item or material",searchPh:"Try “olive jift” or “broken umbrella”",ask:"Ask the agent",
+ hint:"Typing filters the materials below. Press “Ask the agent” for anything else.",
+ hintNoAI:"Typing filters the materials below. AI answers for other items work when the app is opened in Claude.",
+ matsTitle:"Choose a material",count:"{n} materials",noMatch:"No material matches. Press “Ask the agent” and it will work it out.",isNew:"New",
+ safetyTitle:"Safety before you start",lvl:{h:"High risk",m:"Take care",l:"Good to know"},
+ tRecycle:"Recycle",sRecycle:"same material again",tDown:"Downcycle",sDown:"lower-grade use",tUp:"Upcycle",sUp:"higher-value creation",
+ howRecycle:"How to recycle",howDown:"How to downcycle",upIdeas:"Upcycling ideas",upSub:"Turn it into something worth more than the original.",noUp:"There's no safe upcycling option for this item.",
+ openAs:"Open a tutorial:",watch:"Watch video",photos:"See photos",read:"Read guide",recommended:"Recommended",
+ why:{video:"Best as a video: the technique is easier to follow when you see it step by step.",photo:"Best as photos: it's mostly about the finished look and design ideas.",text:"Best as a written guide: the steps depend on rules you'll want to read carefully."},
+ planet:"What this does for the planet",aiTag:"AI analysis",listen:"Listen",stop:"Stop",
+ logTitle:"Did it? Add it to your tracker",logR:"I recycled it",logD:"I downcycled it",logU:"I upcycled it",logged:"Added to your tracker: {x}",
+ fuTitle:"Ask a follow-up about {x}",fuPh:"e.g. Can I do this with kids? What tools do I need?",fuBtn:"Ask",thinking:"Thinking…",
+ analysing:"Analysing “{x}”: checking safety, methods and impact…",
+ errNoAI:"The AI agent works when this app is opened in Claude. Pick one of the materials above in the meantime.",
+ errGrant:"The agent needs your permission to use Claude. Reload the page and allow it.",errRate:"Too many requests at once. Wait a moment, then try again.",
+ errGen:"The agent couldn't analyse that item. Try describing it differently, e.g. “broken umbrella”.",errFu:"Couldn't get an answer. Try rephrasing your question.",
+ close:"Close",step:"Step {i} of {n}",safetySlide:"Safety first",doneSlide:"Done! Well done for giving it a second life.",
+ play:"Play",pause:"Pause",replay:"Replay",prev:"Previous step",next:"Next step",narration:"Narration",
+ logThis:"Log this in my tracker",watchNote:"Animated walkthrough with captions. Turn on narration to hear each step read aloud.",
+ photoAlt:"Illustration for step {i}: {t}",tip:"Why it matters",noVoice:"Read-aloud isn't available in this browser.",
+ trTitle:"My recycling tracker",trLede:"Tick your eco habits each day and log the items you give a second life. Your data stays on this device.",
+ curStreak:"Current streak",bestStreak:"Best streak",days:"days",day:"day",monthItems:"Items this month",totalItems:"Items in total",
+ habitsTitle:"Weekly habits",habitCol:"Habit",doneCol:"Done",prevWeek:"Previous week",nextWeek:"Next week",thisWeek:"Back to this week",weekOf:"Week of {d}",
+ addHabitLabel:"New habit",addHabitPh:"Add your own habit, e.g. Refused a plastic straw",addHabit:"Add habit",removeHabit:"Remove habit: {x}",
+ checkLabel:"{h}, {d}",
+ h_sort:"Sorted my recycling",h_compost:"Composted food scraps",h_reuse:"Used a reusable bag or bottle",h_up:"Upcycled or repaired something",
+ heatTitle:"Last 12 weeks",heatSummary:"Active on {a} of the last 84 days.",less:"Less",more:"More",
+ methodsTitle:"How you gave items a second life",badgesTitle:"Badges",locked:"Locked",earned:"Earned",
+ badges:{first:["First step","Tick a habit or log an item"],s3:["On a roll","3-day streak"],s7:["Eco week","7-day streak"],ten:["Ten saved","Log 10 items"],all:["Triple loop","Use all three methods"],jift:["Olive hero","Give jift a second life"]},
+ recentTitle:"Recent items",emptyLog:"No items yet. Open a material and press “I recycled it” to log your first one.",del:"Delete {x}",
+ reset:"Reset all tracker data",resetQ:"Delete all your tracker data? This can't be undone.",resetDone:"Tracker data cleared.",
+ mRecycle:"Recycled",mDown:"Downcycled",mUp:"Upcycled",
+ sTitle:"Settings",sLang:"Language",sTheme:"Theme",light:"Light",dark:"Dark",system:"Match my device",sSize:"Text size",sizeN:"Normal",sizeL:"Large",sizeXL:"Extra large",
+ sAccess:"Accessibility",hc:"High contrast",rm:"Reduce motion",sp:"Easier reading spacing",vo:"Narration in video guides",done:"Done",
+ ra:"Read aloud",raHelp:"Tap, click or tab to anything and EcoLoop reads it out — English text in an English voice, Arabic text in an Arabic voice.",
+ raRate:"Reading speed",slow:"Slow",normal:"Normal",fast:"Fast",raTest:"Test both voices",
+ raTestEn:"This is the English voice.",raTestAr:"هذا هو الصوت العربي.",
+ raNoAr:"This device has no Arabic voice installed, so Arabic text may be read badly or not at all. Add an Arabic voice in your device's speech or text-to-speech settings.",
+ raNoEn:"This device has no English voice installed. Add one in your device's speech settings.",raNone:"This browser can't read text aloud. Try Chrome, Edge or Safari.",
+ raOn:"Read aloud is on. Tap anything to hear it.",raBar:"Read aloud is on — tap anything to hear it",readPage:"Read whole page",turnOff:"Turn reading off",
+ raOnline:"If this device has no Arabic (or English) voice installed, EcoLoop automatically uses an online voice instead — this needs an internet connection.",
+ raFailAr:"Couldn't play the Arabic voice here. Add an Arabic voice in your device's speech settings, or open EcoLoop from your own website or the Streamlit version, where the online Arabic voice works.",
+ raFailEn:"Couldn't play the English voice here. Add an English voice in your device's speech settings.",
+ checked:"checked",notChecked:"not checked",selected:"selected",on:"on",off:"off",
+ footer:"Guidance is general. Always follow your local municipality's sorting rules and hazardous-waste regulations.",
+ langChanged:"Language changed to English",themeChanged:"Theme updated"},
+ar:{dir:"rtl",locale:"ar-JO-u-nu-latn",other:"English",otherLang:"en",
+ brand:"إيكولوب",skip:"انتقل إلى المحتوى الرئيسي",settings:"الإعدادات",sections:"الأقسام",navMaterials:"المواد",navTracker:"متتبّعي",
+ h1:"امنح كل شيء حياة ثانية.",
+ lede:"اختر مادة أو صِف أي غرض. يتحقق إيكولوب من السلامة أولًا، ثم يوضح كيف تعيد تدويره أو تدويره بقيمة أقل أو تحويله إلى شيء أفضل، وما أثر ذلك على كوكبنا.",
+ searchLabel:"ابحث عن غرض أو مادة",searchPh:"جرّب «جفت الزيتون» أو «مظلة مكسورة»",ask:"اسأل المساعد",
+ hint:"الكتابة تُصفّي المواد بالأسفل. اضغط «اسأل المساعد» لأي غرض آخر.",
+ hintNoAI:"الكتابة تُصفّي المواد بالأسفل. إجابات الذكاء الاصطناعي للأغراض الأخرى تعمل عند فتح التطبيق داخل Claude.",
+ matsTitle:"اختر مادة",count:"{n} مادة",noMatch:"لا توجد مادة مطابقة. اضغط «اسأل المساعد» وسيجد الحل.",isNew:"جديد",
+ safetyTitle:"السلامة قبل أن تبدأ",lvl:{h:"خطر عالٍ",m:"انتبه",l:"معلومة مفيدة"},
+ tRecycle:"إعادة التدوير",sRecycle:"المادة نفسها من جديد",tDown:"تدوير بقيمة أقل",sDown:"استخدام أدنى جودة",tUp:"تدوير إبداعي",sUp:"صنع شيء أعلى قيمة",
+ howRecycle:"كيف تعيد تدويره",howDown:"كيف تدوّره بقيمة أقل",upIdeas:"أفكار للتدوير الإبداعي",upSub:"حوّله إلى شيء قيمته أكبر من الأصل.",noUp:"لا يوجد خيار آمن للتدوير الإبداعي لهذا الغرض.",
+ openAs:"افتح الدليل خطوة بخطوة:",watch:"شاهد فيديو",photos:"شاهد صورًا",read:"اقرأ الدليل",recommended:"مُقترح",
+ why:{video:"الأفضل كفيديو: التقنية أسهل عندما تراها خطوة بخطوة.",photo:"الأفضل كصور: الأمر يتعلق غالبًا بالشكل النهائي وأفكار التصميم.",text:"الأفضل كدليل مكتوب: الخطوات تعتمد على تعليمات يجب قراءتها بعناية."},
+ planet:"ماذا يقدّم هذا لكوكبنا",aiTag:"تحليل بالذكاء الاصطناعي",listen:"استمع",stop:"إيقاف",
+ logTitle:"هل فعلتها؟ أضفها إلى متتبّعك",logR:"أعدت تدويره",logD:"دوّرته بقيمة أقل",logU:"حوّلته إبداعيًا",logged:"أُضيف إلى متتبّعك: {x}",
+ fuTitle:"اطرح سؤالًا إضافيًا عن {x}",fuPh:"مثلًا: هل يمكنني فعل ذلك مع الأطفال؟ ما الأدوات التي أحتاجها؟",fuBtn:"اسأل",thinking:"جارٍ التفكير…",
+ analysing:"جارٍ تحليل «{x}»: التحقق من السلامة والطرق والأثر…",
+ errNoAI:"يعمل المساعد الذكي عند فتح التطبيق داخل Claude. اختر إحدى المواد بالأعلى في الوقت الحالي.",
+ errGrant:"يحتاج المساعد إلى إذنك لاستخدام Claude. أعد تحميل الصفحة واسمح بذلك.",errRate:"طلبات كثيرة في وقت واحد. انتظر قليلًا ثم حاول مجددًا.",
+ errGen:"لم يتمكن المساعد من تحليل هذا الغرض. جرّب وصفه بطريقة أخرى، مثل «مظلة مكسورة».",errFu:"تعذّر الحصول على إجابة. جرّب صياغة سؤالك بشكل مختلف.",
+ close:"إغلاق",step:"الخطوة {i} من {n}",safetySlide:"السلامة أولًا",doneSlide:"انتهيت! أحسنت لأنك منحته حياة ثانية.",
+ play:"تشغيل",pause:"إيقاف مؤقت",replay:"إعادة",prev:"الخطوة السابقة",next:"الخطوة التالية",narration:"التعليق الصوتي",
+ logThis:"سجّل هذا في متتبّعي",watchNote:"عرض متحرك مع نص مكتوب. فعّل التعليق الصوتي لسماع كل خطوة.",
+ photoAlt:"رسم توضيحي للخطوة {i}: {t}",tip:"لماذا هذا مهم",noVoice:"القراءة الصوتية غير متاحة في هذا المتصفح.",
+ trTitle:"متتبّع التدوير الخاص بي",trLede:"ضع علامة على عاداتك البيئية كل يوم وسجّل الأغراض التي تمنحها حياة ثانية. بياناتك تبقى على هذا الجهاز.",
+ curStreak:"السلسلة الحالية",bestStreak:"أفضل سلسلة",days:"أيام",day:"يوم",monthItems:"أغراض هذا الشهر",totalItems:"مجموع الأغراض",
+ habitsTitle:"العادات الأسبوعية",habitCol:"العادة",doneCol:"المنجز",prevWeek:"الأسبوع السابق",nextWeek:"الأسبوع التالي",thisWeek:"العودة لهذا الأسبوع",weekOf:"أسبوع {d}",
+ addHabitLabel:"عادة جديدة",addHabitPh:"أضف عادتك الخاصة، مثل: رفضت شفاطة بلاستيكية",addHabit:"أضف العادة",removeHabit:"احذف العادة: {x}",
+ checkLabel:"{h}، {d}",
+ h_sort:"فرزت نفاياتي للتدوير",h_compost:"سمّدت بقايا الطعام",h_reuse:"استخدمت كيسًا أو عبوة قابلة لإعادة الاستخدام",h_up:"حوّلت أو أصلحت شيئًا",
+ heatTitle:"آخر 12 أسبوعًا",heatSummary:"كنت نشطًا في {a} من آخر 84 يومًا.",less:"أقل",more:"أكثر",
+ methodsTitle:"كيف منحت الأغراض حياة ثانية",badgesTitle:"الأوسمة",locked:"مقفل",earned:"مُكتسب",
+ badges:{first:["الخطوة الأولى","ضع علامة على عادة أو سجّل غرضًا"],s3:["على الطريق","سلسلة 3 أيام"],s7:["أسبوع أخضر","سلسلة 7 أيام"],ten:["عشرة أغراض","سجّل 10 أغراض"],all:["الدائرة الكاملة","استخدم الطرق الثلاث"],jift:["بطل الزيتون","امنح الجفت حياة ثانية"]},
+ recentTitle:"آخر الأغراض",emptyLog:"لا توجد أغراض بعد. افتح مادة واضغط «أعدت تدويره» لتسجيل أول غرض.",del:"احذف {x}",
+ reset:"مسح كل بيانات المتتبّع",resetQ:"هل تريد حذف كل بيانات المتتبّع؟ لا يمكن التراجع عن ذلك.",resetDone:"تم مسح بيانات المتتبّع.",
+ mRecycle:"إعادة تدوير",mDown:"تدوير بقيمة أقل",mUp:"تدوير إبداعي",
+ sTitle:"الإعدادات",sLang:"اللغة",sTheme:"المظهر",light:"فاتح",dark:"داكن",system:"حسب جهازي",sSize:"حجم النص",sizeN:"عادي",sizeL:"كبير",sizeXL:"كبير جدًا",
+ sAccess:"إمكانية الوصول",hc:"تباين عالٍ",rm:"تقليل الحركة",sp:"تباعد أسهل للقراءة",vo:"التعليق الصوتي في أدلة الفيديو",done:"تم",
+ ra:"القراءة بصوت عالٍ",raHelp:"المس أو انقر أو انتقل بزر Tab إلى أي شيء وسيقرؤه إيكولوب: النص الإنجليزي بصوت إنجليزي، والنص العربي بصوت عربي.",
+ raRate:"سرعة القراءة",slow:"بطيئة",normal:"عادية",fast:"سريعة",raTest:"اختبر الصوتين",
+ raTestEn:"This is the English voice.",raTestAr:"هذا هو الصوت العربي.",
+ raNoAr:"لا يوجد صوت عربي مثبّت على هذا الجهاز، لذا قد تُقرأ النصوص العربية بشكل خاطئ أو لا تُقرأ. أضف صوتًا عربيًا من إعدادات النطق أو تحويل النص إلى كلام في جهازك.",
+ raNoEn:"لا يوجد صوت إنجليزي مثبّت على هذا الجهاز. أضف واحدًا من إعدادات النطق في جهازك.",raNone:"هذا المتصفح لا يدعم القراءة بصوت عالٍ. جرّب Chrome أو Edge أو Safari.",
+ raOn:"القراءة بصوت عالٍ مفعّلة. المس أي شيء لسماعه.",raBar:"القراءة بصوت عالٍ مفعّلة — المس أي شيء لسماعه",readPage:"اقرأ الصفحة كاملة",turnOff:"إطفاء القراءة",
+ raOnline:"إذا لم يكن على هذا الجهاز صوت عربي (أو إنجليزي) مثبّت، يستخدم إيكولوب صوتًا عبر الإنترنت تلقائيًا، ويتطلب ذلك اتصالًا بالإنترنت.",
+ raFailAr:"تعذّر تشغيل الصوت العربي هنا. أضف صوتًا عربيًا من إعدادات النطق في جهازك، أو افتح إيكولوب من موقعك الخاص أو من نسخة Streamlit حيث يعمل الصوت العربي عبر الإنترنت.",
+ raFailEn:"تعذّر تشغيل الصوت الإنجليزي هنا. أضف صوتًا إنجليزيًا من إعدادات النطق في جهازك.",
+ checked:"محدد",notChecked:"غير محدد",selected:"مختار",on:"مفعّل",off:"غير مفعّل",
+ footer:"الإرشادات عامة. اتبع دائمًا تعليمات الفرز في بلديتك وأنظمة النفايات الخطرة.",
+ langChanged:"تم تغيير اللغة إلى العربية",themeChanged:"تم تحديث المظهر"}
+};
+/* ===== UI TEXT: quiz, game and offline agent ===== */
+Object.assign(STR.en,{
+ navPlay:"Quiz & Play",plTitle:"Quiz & Play",
+ plLede:"Answer questions about recycling numbers and safety hazards to earn points. Spend them on upgrades, or on a round of Bin Blitz.",
+ ptsLabel:"Points",streakLabel:"Answer streak",correctLabel:"Correct answers",bestLabel:"Best Bin Blitz score",
+ kStat:"Numbers & percentages",kWho:"Safety hazards",kLevel:"Hazard level",kHigh:"Spot the danger",
+ qStat:"{n}: which figure completes this fact?",qWho:"Which item does this safety warning belong to?",
+ qLevel:"How serious is this hazard?",qHigh:"Which of these is a HIGH-risk hazard?",
+ qRight:"Correct! +{p} points",qStreakB:"includes +{b} streak bonus",qWrong:"Not quite.",qPen:"−{p} points",
+ qAns:"Answer: {a}",qNext:"Next question",
+ shopTitle:"Upgrades",buy:"Buy · {c} pts",maxed:"Maxed out",upLvl:"Level {i} of {n}",
+ upPer:"Points per answer",upPerD:"Earn {v} points for each correct answer.",
+ upStreak:"Streak bonus",upStreakD:"+{v} extra points for each correct answer in a row.",
+ upShield:"Safety shield",upShieldD:"Lose only {v} points for a wrong answer.",
+ bought:"Upgrade bought: {x}",
+ gTitle:"Bin Blitz",gDesc:"Items fall from the sky. Sort each one into the right bin before it lands. Each round costs {c} points, and every item you sort correctly earns {r} points back.",
+ gPlay:"Play for {c} points",gNeed:"Earn {c} more points in the quiz to unlock a round.",
+ binRec:"Recycle",binComp:"Compost",binHaz:"Hazardous",binGen:"General waste",
+ gLives:"Lives",gScore:"Score",gRight:"✓ Right bin!",gWrongBin:"✗ {x} goes in: {b}",gMissed:"Missed! {x} goes in: {b}",
+ gItem:"Sort: {x}",gKeys:"Tip: keys 1 to 4 pick a bin.",gPause:"Pause",gResume:"Resume",gQuit:"End round",gPaused:"Paused",
+ gOver:"Game over!",gSorted:"You sorted {s} items and earned {p} points.",gNew:"New best score!",gAgain:"Play again · {c} pts",gBack:"Back to the quiz",
+ hintNoAI:"Typing filters the materials below. Press “Ask the agent”: the built-in agent works anywhere, even offline.",
+ offTag:"Built-in agent",offNote:"Answered by EcoLoop's built-in offline agent. Closest match: {x}.",offNoteKey:" Add a Claude API key in Settings for full AI answers outside Claude.",
+ offFail:"The online AI couldn't be reached, so the built-in agent answered instead.",
+ offGenericN:"General guidance",offGenericM:"The built-in agent doesn't know this item yet",
+ sAI:"AI agent",aiModeClaude:"Using Claude (opened inside Claude)",aiModeKey:"Using your Claude API key",aiModeLocal:"Using the built-in offline agent",
+ aiHelp:"Inside Claude, the agent uses Claude automatically. Anywhere else (your own website, Streamlit, offline), EcoLoop answers with its built-in agent. For full AI answers there too, paste a Claude API key from console.anthropic.com. It's saved only on this device.",
+ aiKey:"Claude API key (optional)",aiSave:"Save key",aiClear:"Remove key",aiSaved:"Key saved on this device.",aiRemoved:"Key removed.",
+ aiWarn:"Never put a key inside the website's code: anyone could copy it and use your credit. Each person should enter their own key here.",
+ errKey:"Your API key was rejected. Check it in Settings.",
+ fuLocal:"Built-in answer",
+ la_kids:"Yes, with an adult helping. Keep these safety points in mind:",la_kidsNone:"Yes, it's a good activity to do together. Let children do the simple steps while an adult handles any cutting.",
+ la_tools:"For the first upcycling idea ({x}), you'll need what these steps use:",la_noTools:"You won't need special tools. Just follow the recycling steps:",
+ la_safe:"Here's what to watch out for:",la_safeNone:"There are no major hazards with this item. Just keep it clean and follow local sorting rules.",
+ la_why:"Why it matters:",la_where:"Where it goes:",la_ideas:"Ideas to give it a second life:",la_noIdeas:"There's no safe upcycling option for this item, so recycle or dispose of it properly.",
+ la_def:"Here's the short version:"
+});
+Object.assign(STR.ar,{
+ navPlay:"اختبر والعب",plTitle:"اختبر والعب",
+ plLede:"أجب عن أسئلة حول أرقام التدوير ومخاطر السلامة لتكسب نقاطًا. أنفقها على الترقيات أو على جولة من لعبة «سباق الحاويات».",
+ ptsLabel:"النقاط",streakLabel:"سلسلة الإجابات",correctLabel:"إجابات صحيحة",bestLabel:"أفضل نتيجة في سباق الحاويات",
+ kStat:"أرقام ونسب مئوية",kWho:"مخاطر السلامة",kLevel:"درجة الخطر",kHigh:"اكتشف الخطر",
+ qStat:"{n}: أي رقم يُكمل هذه المعلومة؟",qWho:"لأي غرض يعود تحذير السلامة هذا؟",
+ qLevel:"ما مدى خطورة هذا الأمر؟",qHigh:"أيٌّ من هذه خطر عالٍ؟",
+ qRight:"إجابة صحيحة! +{p} نقطة",qStreakB:"تشمل +{b} مكافأة السلسلة",qWrong:"ليست صحيحة.",qPen:"−{p} نقاط",
+ qAns:"الإجابة: {a}",qNext:"السؤال التالي",
+ shopTitle:"الترقيات",buy:"اشترِ · {c} نقطة",maxed:"أعلى مستوى",upLvl:"المستوى {i} من {n}",
+ upPer:"نقاط لكل إجابة",upPerD:"اكسب {v} نقطة لكل إجابة صحيحة.",
+ upStreak:"مكافأة السلسلة",upStreakD:"+{v} نقاط إضافية لكل إجابة صحيحة متتالية.",
+ upShield:"درع الأمان",upShieldD:"تخسر {v} نقاط فقط عند الإجابة الخاطئة.",
+ bought:"تم شراء الترقية: {x}",
+ gTitle:"سباق الحاويات",gDesc:"تسقط الأغراض من السماء. ضع كل غرض في الحاوية الصحيحة قبل أن يصل إلى الأرض. كل جولة تكلّف {c} نقطة، وتربح {r} نقاط عن كل غرض تفرزه بشكل صحيح.",
+ gPlay:"العب مقابل {c} نقطة",gNeed:"اكسب {c} نقطة إضافية في الاختبار لتفتح جولة.",
+ binRec:"تدوير",binComp:"سماد",binHaz:"نفايات خطرة",binGen:"نفايات عامة",
+ gLives:"المحاولات",gScore:"النتيجة",gRight:"✓ الحاوية الصحيحة!",gWrongBin:"✗ {x} مكانه: {b}",gMissed:"فاتك! {x} مكانه: {b}",
+ gItem:"افرز: {x}",gKeys:"نصيحة: الأزرار من 1 إلى 4 تختار الحاوية.",gPause:"إيقاف مؤقت",gResume:"متابعة",gQuit:"إنهاء الجولة",gPaused:"متوقفة مؤقتًا",
+ gOver:"انتهت اللعبة!",gSorted:"فرزت {s} أغراض وربحت {p} نقطة.",gNew:"أفضل نتيجة جديدة!",gAgain:"العب مجددًا · {c} نقطة",gBack:"العودة إلى الاختبار",
+ hintNoAI:"الكتابة تُصفّي المواد بالأسفل. اضغط «اسأل المساعد»: المساعد المدمج يعمل في أي مكان، حتى دون إنترنت.",
+ offTag:"المساعد المدمج",offNote:"أجاب المساعد المدمج في إيكولوب (يعمل دون إنترنت). أقرب تطابق: {x}.",offNoteKey:" أضف مفتاح Claude API من الإعدادات للحصول على إجابات ذكاء اصطناعي كاملة خارج Claude.",
+ offFail:"تعذّر الوصول إلى الذكاء الاصطناعي عبر الإنترنت، فأجاب المساعد المدمج بدلًا منه.",
+ offGenericN:"إرشادات عامة",offGenericM:"المساعد المدمج لا يعرف هذا الغرض بعد",
+ sAI:"المساعد الذكي",aiModeClaude:"يستخدم Claude (التطبيق مفتوح داخل Claude)",aiModeKey:"يستخدم مفتاح Claude API الخاص بك",aiModeLocal:"يستخدم المساعد المدمج دون إنترنت",
+ aiHelp:"داخل Claude يستخدم المساعد Claude تلقائيًا. في أي مكان آخر (موقعك الخاص أو Streamlit أو دون إنترنت) يجيب إيكولوب بمساعده المدمج. وللحصول على إجابات ذكاء اصطناعي كاملة هناك أيضًا، الصق مفتاح Claude API من console.anthropic.com. يُحفظ المفتاح على هذا الجهاز فقط.",
+ aiKey:"مفتاح Claude API (اختياري)",aiSave:"احفظ المفتاح",aiClear:"احذف المفتاح",aiSaved:"تم حفظ المفتاح على هذا الجهاز.",aiRemoved:"تم حذف المفتاح.",
+ aiWarn:"لا تضع المفتاح أبدًا داخل كود الموقع: يمكن لأي شخص نسخه واستخدام رصيدك. يجب أن يُدخل كل شخص مفتاحه الخاص هنا.",
+ errKey:"تم رفض مفتاح API. تحقّق منه في الإعدادات.",
+ fuLocal:"إجابة المساعد المدمج",
+ la_kids:"نعم، بمساعدة شخص بالغ. انتبهوا لنقاط السلامة هذه:",la_kidsNone:"نعم، إنه نشاط جميل للقيام به معًا. دع الأطفال يقومون بالخطوات البسيطة بينما يتولى شخص بالغ أي قصّ.",
+ la_tools:"لفكرة التدوير الإبداعي الأولى ({x}) ستحتاج ما تستخدمه هذه الخطوات:",la_noTools:"لن تحتاج إلى أدوات خاصة. اتبع خطوات إعادة التدوير فقط:",
+ la_safe:"هذا ما يجب الانتباه إليه:",la_safeNone:"لا توجد مخاطر كبيرة مع هذا الغرض. حافظ عليه نظيفًا واتبع قواعد الفرز في منطقتك.",
+ la_why:"لماذا هذا مهم:",la_where:"أين يذهب:",la_ideas:"أفكار لمنحه حياة ثانية:",la_noIdeas:"لا يوجد خيار آمن للتدوير الإبداعي لهذا الغرض، لذا أعد تدويره أو تخلّص منه بالطريقة الصحيحة.",
+ la_def:"باختصار:"
+});
+
+/* ===== HELPERS ===== */
+const $ = (s,r=document)=>r.querySelector(s), $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+};
+const NEW_IDS = ["jift","fabric","pcup","cutlery","straw","glass","acc"];
+let prefs = Object.assign({read:false,rate:"1",lang:(navigator.language||"").startsWith("ar")?"ar":"en",theme:"system",size:"100",contrast:false,motion:false,spacing:false,voice:false}, store.get("ecoloop:prefs",{}));
+const T = () => STR[prefs.lang];
+const t = (k,vars={}) => { let s = T()[k] ?? STR.en[k] ?? k; for(const [a,b] of Object.entries(vars)) s = s.replace("{"+a+"}", b); return s; };
+const announce = msg => { const a=$("#announcer"); a.textContent=""; setTimeout(()=>a.textContent=msg,60); };
+const reduceMotion = () => prefs.motion || matchMedia("(prefers-reduced-motion: reduce)").matches;
+const norm = s => String(s||"").toLowerCase().replace(/[\u064B-\u0652\u0640]/g,"").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").trim();
+const dkey = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+const fmtDate = (d,o) => new Intl.DateTimeFormat(T().locale,o).format(d);
+
+/* ===== PREFERENCES / I18N ===== */
+function applyPrefs(){
+  const r = document.documentElement;
+  r.lang = prefs.lang; r.dir = T().dir;
+  if(prefs.theme==="system") r.removeAttribute("data-theme"); else r.dataset.theme = prefs.theme;
+  r.style.fontSize = prefs.size + "%";
+  prefs.contrast ? r.dataset.contrast="high" : r.removeAttribute("data-contrast");
+  prefs.motion ? r.dataset.motion="reduce" : r.removeAttribute("data-motion");
+  prefs.spacing ? r.dataset.spacing="wide" : r.removeAttribute("data-spacing");
+  document.title = prefs.lang==="ar" ? "إيكولوب — مساعد الاستدامة" : "EcoLoop — sustainability agent";
+  $$("[data-i18n]").forEach(el=>el.textContent = t(el.dataset.i18n));
+  $$("[data-i18n-ph]").forEach(el=>el.placeholder = t(el.dataset.i18nPh));
+  $$("[data-i18n-aria]").forEach(el=>el.setAttribute("aria-label", t(el.dataset.i18nAria)));
+  const lb = $("#langBtnText"); lb.textContent = T().other; lb.lang = T().otherLang;
+  $("#langBtn").setAttribute("aria-label", prefs.lang==="ar" ? "Switch to English" : "التبديل إلى العربية");
+  $("#hint").textContent = sample || !aiChecked ? t("hint") : t("hintNoAI");
+  store.set("ecoloop:prefs", prefs);
+  updateReaderBar();
+}
+function rerenderAll(){ applyPrefs(); drawGrid($("#q").value); if(current) render(current, false); if(!$("#page-tracker").hidden) renderTracker(); if(!$("#page-play").hidden) renderPlay(); if($("#settings").open) renderSettings(); }
+$("#langBtn").onclick = () => { prefs.lang = prefs.lang==="ar"?"en":"ar"; rerenderAll(); announce(t("langChanged")); };
+
+/* ===== NAVIGATION ===== */
+function showPage(p){
+  $$("nav.tabs button").forEach(b=>b.toggleAttribute("aria-current", false) || (b.dataset.page===p && b.setAttribute("aria-current","page")));
+  $("#page-materials").hidden = p!=="materials"; $("#heroMaterials").hidden = p!=="materials";
+  $("#page-tracker").hidden = p!=="tracker"; $("#heroTracker").hidden = p!=="tracker";
+  $("#page-play").hidden = p!=="play"; $("#heroPlay").hidden = p!=="play";
+  if(p!=="play" && G.mode==="play" && !G.paused) togglePause();
+  if(p==="tracker") renderTracker();
+  if(p==="play") renderPlay();
+  $("#main").focus({preventScroll:true});
+}
+$$("nav.tabs button").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+
+/* ===== MATERIAL GRID & SEARCH ===== */
+function matText(m,l){ return m[l]; }
+function drawGrid(filter=""){
+  const f = norm(filter);
+  const list = MATS.filter(m => !f || norm([m.en.n,m.en.k,m.en.m,m.ar.n,m.ar.k].join(" ")).includes(f));
+  $("#grid").innerHTML = list.map(m => `<li><button class="mat" type="button" data-id="${m.id}" aria-pressed="${current?.id===m.id}">
+    <span class="emo" aria-hidden="true">${m.e}</span><span class="lbl">${esc(matText(m,prefs.lang).n)}</span>${NEW_IDS.includes(m.id)?`<span class="new">${t("isNew")}</span>`:""}</button></li>`).join("");
+  $("#empty").hidden = list.length>0;
+  $("#matCount").textContent = t("count",{n:list.length});
+}
+$("#q").addEventListener("input", e => drawGrid(e.target.value));
+$("#grid").addEventListener("click", e => {
+  const b = e.target.closest(".mat"); if(!b) return;
+  current = {id:b.dataset.id}; drawGrid($("#q").value); render(current, true);
+});
+
+/* ===== VIEW MODEL ===== */
+let current = null;   // {id} for built-in, or {ai:true, data, lang}
+let method = "recycle";
+function vm(cur){
+  if(cur.ai) return cur.data;
+  const m = MATS.find(x=>x.id===cur.id), L = m[prefs.lang], f = m.f;
+  return { id:m.id, e:m.e, n:L.n, m:L.m, s:L.s,
+    r:{sum:L.r[0],steps:L.r[1],fmt:f[0]}, d:{sum:L.d[0],steps:L.d[1],fmt:f[1]},
+    u:L.u.map((x,i)=>({t:x[0],steps:x[1],fmt:f[2+i]||"photo"})), st:L.st, p:L.p, g:L.g };
+}
+
+/* ===== RESULT ===== */
+function render(cur, scroll){
+  current = cur; const d = vm(cur);
+  const safety = [...(d.s||[])].sort((a,b)=>"hml".indexOf(a[0])-"hml".indexOf(b[0]));
+  const icon = {h:"⛔",m:"⚠️",l:"ℹ️"};
+  $("#result").innerHTML = `<article class="panel" aria-labelledby="resTitle">
+    <div class="res-head"><div class="ic emo" aria-hidden="true">${esc(d.e)}</div>
+      <div class="grow"><h2 id="resTitle">${esc(d.n)}${cur.ai?`<span class="tag">${t(d.local?"offTag":"aiTag")}</span>`:""}</h2><p>${esc(d.m)}</p></div>
+</div>
+    ${cur.ai&&d.note?`<p class="offnote" role="note">🌿 ${esc(d.note)}</p>`:""}
+    ${safety.length?`<section class="safety" aria-labelledby="safeT"><h3 id="safeT"><span class="emo" aria-hidden="true">⚠️</span>${t("safetyTitle")}</h3><ul>${safety.map(s=>`<li><span class="lvl ${s[0]}"><span class="emo" aria-hidden="true">${icon[s[0]]||"ℹ️"}</span> ${T().lvl[s[0]]||""}</span><span>${esc(s[1])}</span></li>`).join("")}</ul></section>`:""}
+    <div class="cols">
+      <div>
+        <div class="cycle" role="tablist" aria-label="${t("tRecycle")} / ${t("tDown")} / ${t("tUp")}">
+          ${tab("recycle",t("tRecycle"),t("sRecycle"))}${tab("downcycle",t("tDown"),t("sDown"))}${tab("upcycle",t("tUp"),t("sUp"))}
+        </div>
+        <div id="methodBody" class="method" role="tabpanel" tabindex="0"></div>
+      </div>
+      <aside class="benefit" aria-labelledby="benT">
+        <h3 id="benT">${t("planet")}</h3>
+        <div class="stats">${(d.st||[]).map(s=>`<div class="stat"><strong>${esc(s[0])}</strong><span>${esc(s[1])}</span></div>`).join("")}</div>
+        <ul>${(d.p||[]).map(p=>`<li>${esc(p)}</li>`).join("")}</ul>
+        ${d.g?`<p class="sdg">${esc(d.g)}</p>`:""}
+      </aside>
+    </div>
+    <section class="logbox" aria-labelledby="logT"><h3 id="logT"><span class="emo" aria-hidden="true">📅</span> ${t("logTitle")}</h3>
+      <div class="gbtns">
+        <button class="btn" type="button" data-log="recycle">♻️ ${t("logR")}</button>
+        <button class="btn" type="button" data-log="downcycle">⬇️ ${t("logD")}</button>
+        <button class="btn" type="button" data-log="upcycle">✨ ${t("logU")}</button>
+      </div></section>
+    <section class="ask" id="askWrap" aria-labelledby="fuT">
+      <h3 id="fuT">${t("fuTitle",{x:esc(d.n)})}</h3>
+      <form class="search" id="fuForm"><label for="fu" class="sr">${t("fuTitle",{x:esc(d.n)})}</label><input id="fu" placeholder="${esc(t("fuPh"))}"><button class="btn" id="fuBtn" type="submit">${t("fuBtn")}</button></form>
+      <div id="fuOut" aria-live="polite"></div>
+    </section>
+  </article>`;
+  const tabs = $$(".cycle [role=tab]");
+  tabs.forEach(b=>{ b.onclick=()=>showMethod(b.dataset.m); });
+  arrowTabs($(".cycle"), m=>showMethod(m));
+  showMethod(scroll ? "recycle" : method);
+  $$("[data-log]").forEach(b=>b.onclick=()=>logItem(d, b.dataset.log));
+  $("#fuForm").addEventListener("submit", e=>{ e.preventDefault(); followUp(); });
+  if(scroll){ $("#result").scrollIntoView({behavior:reduceMotion()?"auto":"smooth",block:"start"}); $("#result").focus({preventScroll:true}); }
+  if(scroll && prefs.read){
+    Reader.suppress(400);
+    const parts = [$("#resTitle"), $("#result .res-head p"), $("#safeT"), ...$$("#result .safety li")].filter(Boolean);
+    Reader.sayItems(parts.map(el=>({text:readableText(el), el})));
+  }
+}
+const tab = (k,ttl,sub)=>`<button role="tab" type="button" id="tab-${k}" data-m="${k}" aria-controls="methodBody" aria-selected="false" tabindex="-1"><b>${ttl}</b><small>${sub}</small></button>`;
+function arrowTabs(list, onPick){
+  list.addEventListener("keydown", e=>{
+    const tabs=$$("[role=tab]",list), i=tabs.indexOf(document.activeElement); if(i<0) return;
+    const rtl = document.documentElement.dir==="rtl";
+    let j=null;
+    if(e.key===(rtl?"ArrowLeft":"ArrowRight")) j=(i+1)%tabs.length;
+    if(e.key===(rtl?"ArrowRight":"ArrowLeft")) j=(i-1+tabs.length)%tabs.length;
+    if(e.key==="Home") j=0; if(e.key==="End") j=tabs.length-1;
+    if(j!==null){ e.preventDefault(); tabs[j].focus(); onPick(tabs[j].dataset.m||tabs[j].dataset.v); }
+  });
+}
+const enc = encodeURIComponent;
+const LINK = {
+  video: q => "https://www.youtube.com/results?search_query="+enc(q),
+  photo: q => "https://www.google.com/search?tbm=isch&q="+enc(q),
+  text:  q => "https://www.google.com/search?q="+enc(q)
+};
+function queryFor(kind, name, title){
+  if(prefs.lang==="ar"){
+    if(kind==="recycle") return "طريقة إعادة تدوير "+name;
+    if(kind==="downcycle") return "استخدامات "+name+" بعد التدوير";
+    return title+" بطريقة سهلة";
+  }
+  if(kind==="recycle") return "how to recycle "+name;
+  if(kind==="downcycle") return name+" downcycling recycled into";
+  return title+" DIY";
+}
+function guideButtons(fmt, query){
+  const order = [fmt, ...["video","photo","text"].filter(x=>x!==fmt)];
+  const lab = {video:["▶️",t("watch")],photo:["🖼️",t("photos")],text:["📖",t("read")]};
+  const nt = prefs.lang==="ar" ? "يفتح في علامة تبويب جديدة" : "opens in a new tab";
+  return `<div class="guide"><p>${esc(T().why[fmt]||T().why.text)}</p><div class="gbtns">${order.map((f,i)=>
+    `<a class="gbtn ${i?"":"best"}" href="${LINK[f](query)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><span class="emo" aria-hidden="true">${lab[f][0]}</span>${lab[f][1]}${i?"":` <small>· ${t("recommended")}</small>`} <span aria-hidden="true">↗</span><span class="sr"> (${nt})</span></a>`).join("")}</div></div>`;
+}
+function showMethod(k){
+  method = k; stopSpeech();
+  $$(".cycle [role=tab]").forEach(b=>{ const on=b.dataset.m===k; b.setAttribute("aria-selected",on); b.tabIndex=on?0:-1; });
+  const body=$("#methodBody"), d=vm(current);
+  body.setAttribute("aria-labelledby","tab-"+k);
+  if(k==="upcycle"){
+    body.innerHTML = `<h3>${t("upIdeas")}</h3><p class="sum">${t("upSub")}</p>` + (d.u?.length ? d.u.map((u,i)=>`<div class="idea"><h4>${esc(u.t)}</h4><ol class="steps">${u.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>${guideButtons(u.fmt, queryFor("upcycle", d.n, u.t))}</div>`).join("") : `<p>${t("noUp")}</p>`);
+  } else {
+    const m = k==="recycle"?d.r:d.d;
+    body.innerHTML = `<h3>${t(k==="recycle"?"howRecycle":"howDown")}</h3><p class="sum">${esc(m.sum)}</p><ol class="steps">${m.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>${guideButtons(m.fmt, queryFor(k, d.n))}`;
+  }
+}
+
+/* ===== READ ALOUD (bilingual) ===== */
+const Reader = (()=>{
+  const synth = window.speechSynthesis, ok = !!synth && "SpeechSynthesisUtterance" in window;
+  let voices = [], timer = null, lit = null, suppressUntil = 0;
+  const loadVoices = ()=>{ voices = ok ? synth.getVoices() : []; if($("#settings")?.open) renderSettings(true); };
+  if(ok){ loadVoices(); synth.addEventListener?.("voiceschanged", loadVoices); }
+  const AR = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/, LAT = /[A-Za-z]/;
+  function voiceFor(l){
+    const prefsList = l==="ar" ? ["ar-jo","ar-sa","ar-ae","ar-eg","ar"] : ["en-gb","en-us","en-au","en"];
+    for(const p of prefsList){ const v = voices.find(v=>v.lang.replace("_","-").toLowerCase().startsWith(p)); if(v) return v; }
+    return null;
+  }
+  // make symbols speakable in each language
+  function clean(text,l){
+    return text.replace(/≈\s*/g, l==="ar"?"حوالي ":"about ")
+      .replace(/CO₂/g,"CO2").replace(/(\d)\s*×/g, l==="ar"?"$1 أضعاف":"$1 times")
+      .replace(/(\d)\s*[–-]\s*(\d)/g, l==="ar"?"$1 إلى $2":"$1 to $2")
+      .replace(/\+(\d)/g, l==="ar"?"أكثر من $1":"more than $1").replace(/(\d)\+/g, l==="ar"?"أكثر من $1":"more than $1")
+      .replace(/\p{Extended_Pictographic}|\uFE0F|\u200D/gu,"").replace(/[↗✓✕•·★＋]/g," ").replace(/\s+/g," ").trim();
+  }
+  // split mixed text into Arabic / English runs so each gets the right voice
+  function runs(text){
+    const out=[];
+    for(const w of text.split(/\s+/).filter(Boolean)){
+      const l = AR.test(w) ? "ar" : LAT.test(w) ? "en" : null, last = out[out.length-1];
+      if(!last) out.push({l:l||prefs.lang, t:w}); else if(!l || l===last.l) last.t += " "+w; else out.push({l, t:w});
+    }
+    return out;
+  }
+  function pieces(text){ // short sentences avoid a Chrome bug that cuts off long speech
+    const parts = text.match(/[^.!?؟،,;؛:]+[.!?؟،,;؛:]*/g) || [text], out=[]; let cur="";
+    for(const p of parts){ if((cur+p).length>180 && cur){ out.push(cur); cur=p; } else cur+=p;
+      while(cur.length>180){ const cut = cur.lastIndexOf(" ",180)>40 ? cur.lastIndexOf(" ",180) : 180; out.push(cur.slice(0,cut)); cur=cur.slice(cut); } }
+    if(cur.trim()) out.push(cur); return out;
+  }
+  function highlight(el){ if(lit) lit.classList.remove("reading"); lit = el||null; if(lit) lit.classList.add("reading"); }
+  let token = 0, audio = null;
+  function stop(){ token++; clearTimeout(timer); if(ok) synth.cancel(); if(audio){ audio.pause(); audio=null; } highlight(null); }
+  // No device voice for this language (common for Arabic on laptops)? Use an online voice instead.
+  const onlineUrl = (text,l) => "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl="+(l==="ar"?"ar":"en")+"&q="+encodeURIComponent(text);
+  function failNote(l){ const m = t(l==="ar"?"raFailAr":"raFailEn"); announce(m); const n=$("#rbNote"); if(n){ n.textContent=m; n.hidden=false; } }
+  function playOne(q, my, next){
+    const v = voiceFor(q.l), rate = +prefs.rate || 1;
+    if(v && ok){
+      const u = new SpeechSynthesisUtterance(q.t); u.voice=v; u.lang=v.lang; u.rate=rate;
+      u.onend = ()=>{ if(my===token) next(); }; u.onerror = ()=>{ if(my===token) next(); };
+      synth.speak(u);
+    } else {
+      audio = new Audio(onlineUrl(q.t,q.l)); audio.playbackRate = rate;
+      audio.onended = ()=>{ if(my===token) next(); };
+      audio.onerror = ()=>{ if(my===token){ failNote(q.l); next(); } };
+      audio.play().catch(()=>{ if(my===token){ failNote(q.l); next(); } });
+    }
+  }
+  function sayItems(items, onend){
+    if(!items.length) return;
+    stop(); const my = token, queue = [];
+    items.forEach(it=>{ runs(it.text).forEach(r=>pieces(clean(r.t,r.l)).forEach(ch=>{ if(ch.trim()) queue.push({t:ch,l:r.l,el:it.el}); })); });
+    let i = 0;
+    const next = ()=>{ if(my!==token) return; if(i>=queue.length){ highlight(null); onend&&onend(); return; } const q=queue[i++]; highlight(q.el); playOne(q,my,next); };
+    timer = setTimeout(next, 60);
+  }
+  const say = (text, el, onend) => sayItems([{text, el}], onend);
+  return { ok, say, sayItems, stop, voiceFor, suppress:(ms)=>{ suppressUntil = Date.now()+ms; }, suppressed:()=>Date.now()<suppressUntil };
+})();
+
+// What should be read for an element? Its real content, never just "box" or "text".
+const READ_SEL = "button,a,input,select,textarea,[role=tab],summary,label,h1,h2,h3,h4,h5,p,li,th,td,figcaption,caption,legend,.stat,.card,.badge,.lvl,.tag,.mbar";
+function plainText(el){
+  const c = el.cloneNode(true);
+  c.querySelectorAll('[aria-hidden="true"],.emo,script,style,input,svg').forEach(n=>n.remove());
+  c.querySelectorAll("*").forEach(n=>n.append(" "));   // keep words in separate boxes apart
+  return c.textContent.replace(/\s+/g," ").trim();
+}
+function readableText(el){
+  if(el.matches("input[type=checkbox],input[type=radio]")){
+    const lab = el.getAttribute("aria-label") || (el.labels?.[0] ? plainText(el.labels[0]) : "");
+    const state = el.type==="radio" ? (el.checked ? t("selected") : "")
+      : el.getAttribute("role")==="switch" ? (el.checked ? t("on") : t("off")) : (el.checked ? t("checked") : t("notChecked"));
+    return [lab, state].filter(Boolean).join(", ");
+  }
+  if(el.matches("input,textarea,select")){
+    const lab = el.getAttribute("aria-label") || (el.labels?.[0] ? plainText(el.labels[0]) : "") || el.placeholder || "";
+    const val = el.value ? el.value : (el.placeholder && el.placeholder!==lab ? el.placeholder : "");
+    return [lab, val].filter(Boolean).join(": ");
+  }
+  if(el.matches("label") && el.control && el.control.matches("input[type=checkbox],input[type=radio]")) return readableText(el.control);
+  const own = plainText(el);
+  const aria = el.getAttribute("aria-label");
+  let text = el.matches("button,a,[role=tab]") ? (own || aria || "") : (own || aria || "");
+  if(el.matches("[role=tab]") && el.getAttribute("aria-selected")==="true") text += ", " + t("selected");
+  if(el.getAttribute("aria-pressed")==="true") text += ", " + t("on");
+  return text;
+}
+function readElement(el){
+  if(!el) return;
+  const text = readableText(el); if(text) Reader.say(text, el);
+}
+let lastRead = {el:null, time:0};
+function readTarget(target){
+  if(!prefs.read || Reader.suppressed()) return;
+  if(target.closest("#readerBar,[data-noread]")) return;
+  const el = target.closest(READ_SEL); if(!el) return;
+  if(lastRead.el===el && Date.now()-lastRead.time<500) return;
+  lastRead = {el, time:Date.now()};
+  setTimeout(()=>{ if(!Reader.suppressed()) readElement(el.isConnected ? el : null); }, 40);   // wait so ticked boxes / selected tabs read their new state
+}
+document.addEventListener("click", e=>readTarget(e.target));
+document.addEventListener("focusin", e=>{ if(e.target.matches(":focus-visible")) readTarget(e.target); });
+
+// "Read whole page": hero, then the result (or the materials / tracker), top to bottom, highlighting as it goes
+function readPage(){
+  const SEL = "h1,h2,h3,h4,p,li,th[scope=row],figcaption,.stat,.card,.badge,legend";
+  const items = [];
+  const collect = root => $$(SEL, root).forEach(el=>{
+    if(el.closest('[aria-hidden="true"],[hidden],.sr') || !el.offsetParent) return;
+    const parent = el.parentElement.closest(SEL); if(parent && root.contains(parent)) return;
+    const text = readableText(el); if(text) items.push({text, el});
+  });
+  const onTracker = !$("#page-tracker").hidden, hasResult = !!$("#result").textContent.trim();
+  if(onTracker || !hasResult) collect($("header.top"));
+  collect(onTracker ? $("#page-tracker") : hasResult ? $("#result") : $("#page-materials"));
+  Reader.sayItems(items);
+}
+function updateReaderBar(){
+  const bar = $("#readerBar"); if(!bar) return;
+  bar.hidden = !prefs.read;
+  document.body.classList.toggle("has-reader", !!prefs.read);
+  bar.innerHTML = `<span class="emo" aria-hidden="true">🔊</span><span class="rb-text">${t("raBar")}</span>
+    <button type="button" class="btn" id="rbPage">${t("readPage")}</button>
+    <button type="button" class="btn ghost" id="rbStop">⏹ ${t("stop")}</button>
+    <button type="button" class="btn ghost" id="rbOff">${t("turnOff")}</button>
+    <p id="rbNote" class="err" role="status" style="flex-basis:100%;margin:4px 0 0;padding:6px 10px" hidden></p>`;
+  $("#rbPage").onclick=readPage; $("#rbStop").onclick=()=>Reader.stop();
+  $("#rbOff").onclick=()=>{ prefs.read=false; Reader.stop(); applyPrefs(); if($("#settings").open) renderSettings(); announce(t("off")); };
+}
+// compatibility for older code
+const canSpeak = Reader.ok;
+function speak(text, onend){ Reader.say(text, null, onend); return true; }
+function stopSpeech(){}
+
+/* ===== IN-APP GUIDE VIEWER ===== */
+const ACTIONS = [
+  [/glove|قفاز/i,"🧤"],[/safety glasses|eye protection|نظارات/i,"🥽"],
+  [/\bcut|scissor|snip|trim|قص|اقطع/i,"✂️"],[/rinse|wash|soak|clean|اشطف|اغسل|انقع|نظّف/i,"💧"],
+  [/\bdry|sun\b|جفّف|جفف|الشمس/i,"☀️"],[/flatten|squash|crush|press|سطّح|اضغط|اعصر/i,"🗜️"],
+  [/paint|draw|varnish|colour|color|لوّن|ارسم|اطلها|اكتب/i,"🖌️"],[/sew|stitch|crochet|hem|string|knot|اخِط|خِط|احِك|اربط|انظم/i,"🪡"],
+  [/hole|poke|drill|pierce|اثقب/i,"🪛"],[/glue|tape|stick|ألصق|شريط|ثبّت/i,"🧷"],
+  [/soil|plant|sow|seed|compost|mulch|ازرع|التربة|سماد|سمّد|بذور|الشتلة/i,"🌱"],[/water|اسقِ|الماء|ماء/i,"🚿"],
+  [/hang|علّق/i,"🪝"],[/candle|light|شمعة/i,"🕯️"],[/back up|wipe|reset|امسح|انسخ/i,"🔄"],
+  [/check|ask|find|look for|تحقّق|اسأل|ابحث|تأكد/i,"🔍"],[/store|keep|bag|احفظ|خزّن|أبقِ|اجمع|كيس/i,"📦"],
+  [/take|drop|deliver|return|give|donate|hand|send|sell|سلّم|أعد|أعطِ|خذ|تبرّع|أرسل|بعها/i,"🚚"],
+  [/bin|recycl|حاوية|دوّر/i,"♻️"],[/remove|separate|empty|انزع|افصل|أفرغ|أزل|فكّك/i,"✋"],[/burn|stove|fire|أحرق|مدفأة/i,"🔥"]
+];
+const actionFor = s => (ACTIONS.find(([re])=>re.test(s))||[0,"✨"])[1];
+let V = {key:null, slides:[], i:0, playing:false, timer:null, tab:"video"};
+function procFor(key){
+  const d=vm(current);
+  if(key==="r") return {title:t("tRecycle")+": "+d.n, sum:d.r.sum, steps:d.r.steps, fmt:d.r.fmt, method:"recycle"};
+  if(key==="d") return {title:t("tDown")+": "+d.n, sum:d.d.sum, steps:d.d.steps, fmt:d.d.fmt, method:"downcycle"};
+  const u=d.u[+key.slice(1)]; return {title:u.t, sum:"", steps:u.steps, fmt:u.fmt, method:"upcycle"};
+}
+function openViewer(key, fmt){
+  const d=vm(current), p=procFor(key);
+  const top=[...(d.s||[])].sort((a,b)=>"hml".indexOf(a[0])-"hml".indexOf(b[0]))[0];
+  V.key=key; V.p=p; V.d=d; V.i=0; V.playing=false;
+  V.slides = [ ...(top?[{e:"⚠️",label:t("safetySlide"),text:top[1]}]:[]),
+    ...p.steps.map((s,i)=>({e:actionFor(s),label:t("step",{i:i+1,n:p.steps.length}),text:s})),
+    {e:"🎉",label:"✓",text:t("doneSlide"),done:true} ];
+  $("#vEmoji").textContent=d.e; $("#vTitle").textContent=p.title;
+  const lab={video:["▶️",t("watch")],photo:["🖼️",t("photos")],text:["📖",t("read")]};
+  $("#vtabs").innerHTML = ["video","photo","text"].map(f=>`<button role="tab" type="button" id="vt-${f}" data-v="${f}" aria-controls="vpanel" aria-selected="false" tabindex="-1"><span class="emo" aria-hidden="true">${lab[f][0]}</span>${lab[f][1]}${f===p.fmt?`<span class="rec">${t("recommended")}</span>`:""}</button>`).join("");
+  $$("#vtabs [role=tab]").forEach(b=>b.onclick=()=>vTab(b.dataset.v));
+  stopSpeech(); $("#viewer").showModal(); vTab(fmt||p.fmt, true);
+}
+if(!$("#vtabs").dataset.bound){ arrowTabs($("#vtabs"), v=>vTab(v)); $("#vtabs").dataset.bound=1; }
+function vTab(v, focus){
+  vStop(); V.tab=v;
+  $$("#vtabs [role=tab]").forEach(b=>{ const on=b.dataset.v===v; b.setAttribute("aria-selected",on); b.tabIndex=on?0:-1; });
+  const panel=$("#vpanel"); panel.setAttribute("aria-labelledby","vt-"+v);
+  if(v==="video") renderWatch(); else if(v==="photo") renderPhotos(); else renderRead();
+  if(focus) $("#vt-"+v).focus();
+}
+function renderWatch(){
+  $("#vpanel").innerHTML = `<div class="stage" role="group" aria-roledescription="slideshow" aria-label="${esc(V.p.title)}">
+      <div class="bars" aria-hidden="true">${V.slides.map(()=>"<span><i></i></span>").join("")}</div>
+      <div class="scene" id="scene"></div>
+      <p class="cap" id="cap" aria-live="polite"></p></div>
+    <div class="ctrls">
+      <button class="cbtn" type="button" id="vPrev" aria-label="${t("prev")}"><span aria-hidden="true">${prefs.lang==="ar"?"▶":"◀"}</span></button>
+      <button class="cbtn main" type="button" id="vPlay"></button>
+      <button class="cbtn" type="button" id="vNext" aria-label="${t("next")}"><span aria-hidden="true">${prefs.lang==="ar"?"◀":"▶"}</span></button>
+      <button class="cbtn" type="button" id="vVoice" aria-pressed="${prefs.voice}"><span class="emo" aria-hidden="true">🔊</span>${t("narration")}</button>
+    </div><p class="vnote">${t("watchNote")}</p><div id="vLog"></div>`;
+  $("#vPrev").onclick=()=>{ vGo(V.i-1); };
+  $("#vNext").onclick=()=>{ vGo(V.i+1); };
+  $("#vPlay").onclick=()=>{ V.playing ? vStop() : vPlay(); };
+  $("#vVoice").onclick=e=>{ prefs.voice=!prefs.voice; e.currentTarget.setAttribute("aria-pressed",prefs.voice); store.set("ecoloop:prefs",prefs); if(!prefs.voice) speechSynthesis?.cancel(); else if(V.playing) vShow(); if(prefs.voice&&!canSpeak) announce(t("noVoice")); };
+  vShow();
+}
+function vShow(){
+  const s=V.slides[V.i], n=V.slides.length;
+  $$(".bars span").forEach((b,j)=>{ b.className = j<V.i?"done":j===V.i?"cur":""; });
+  const words = s.text.split(/\s+/).length, dur = Math.max(4, Math.min(12, words*.5+2));
+  const stage=$(".stage"); stage.style.setProperty("--dur",dur+"s"); stage.style.setProperty("--ps",V.playing?"running":"paused");
+  const cur=$(".bars span.cur i"); if(cur){ cur.style.animation="none"; cur.offsetWidth; cur.style.animation=""; }
+  const sc=$("#scene"); sc.classList.remove("pop"); sc.offsetWidth; if(!reduceMotion()) sc.classList.add("pop");
+  sc.innerHTML = `<div class="pair" role="img" aria-label="${esc(t("photoAlt",{i:V.i+1,t:s.text}))}"><span class="big">${esc(V.d.e)}</span><span class="act">${s.e}</span></div>`;
+  $("#cap").innerHTML = `<b>${esc(s.label)}</b>${esc(s.text)}`;
+  $("#vPlay").innerHTML = V.playing ? `<span aria-hidden="true">⏸</span> ${t("pause")}` : (V.i===n-1 ? `<span aria-hidden="true">↺</span> ${t("replay")}` : `<span aria-hidden="true">▶</span> ${t("play")}`);
+  $("#vPrev").disabled = V.i===0; $("#vNext").disabled = V.i===n-1;
+  $("#vLog").innerHTML = s.done ? `<div class="ctrls"><button class="btn" type="button" id="vLogBtn">📅 ${t("logThis")}</button></div>` : "";
+  if(s.done) $("#vLogBtn").onclick=()=>logItem(V.d,V.p.method);
+  clearTimeout(V.timer);
+  if(V.playing){
+    const next = ()=>{ if(!V.playing) return; if(V.i<n-1){ V.i++; vShow(); } else { V.playing=false; vShow(); } };
+    if(prefs.voice && canSpeak) speak(s.label+". "+s.text, ()=>{ V.timer=setTimeout(next,500); });
+    else V.timer=setTimeout(next, dur*1000);
+  }
+}
+function vGo(i){ if(i<0||i>=V.slides.length) return; V.i=i; if(canSpeak) speechSynthesis.cancel(); vShow(); }
+function vPlay(){ if(V.i===V.slides.length-1) V.i=0; V.playing=true; vShow(); }
+function vStop(){ V.playing=false; clearTimeout(V.timer); if(canSpeak) speechSynthesis.cancel(); if($("#scene")) vShow(); }
+function renderPhotos(){
+  const tints=[["#DDF0DF","#B8DFBF"],["#E3F1E5","#C6E5CA"],["#D7ECDD","#A9D6B3"],["#E9F4EA","#CFE8D2"]];
+  const steps=V.p.steps;
+  $("#vpanel").innerHTML = `<ol class="photos">${steps.map((s,i)=>`<li><figure class="photo">
+    <div class="pic" style="--g1:${tints[i%4][0]};--g2:${tints[i%4][1]}" role="img" aria-label="${esc(t("photoAlt",{i:i+1,t:s}))}"><span class="num" aria-hidden="true">${i+1}</span><div class="pair" aria-hidden="true"><span class="big">${esc(V.d.e)}</span><span class="act">${actionFor(s)}</span></div></div>
+    <figcaption><span class="sr">${t("step",{i:i+1,n:steps.length})}: </span>${esc(s)}</figcaption></figure></li>`).join("")}</ol>
+    <div class="ctrls"><button class="btn" type="button" id="pLog">📅 ${t("logThis")}</button></div>`;
+  $("#pLog").onclick=()=>logItem(V.d,V.p.method);
+}
+function renderRead(){
+  const d=V.d, icon={h:"⛔",m:"⚠️",l:"ℹ️"};
+  const safety=[...(d.s||[])].sort((a,b)=>"hml".indexOf(a[0])-"hml".indexOf(b[0]));
+  $("#vpanel").innerHTML = `<article class="readv"><h3>${esc(V.p.title)}</h3>${V.p.sum?`<p class="muted">${esc(V.p.sum)}</p>`:""}
+    ${safety.length?`<section class="safety"><h4 style="margin:0 0 6px">${t("safetyTitle")}</h4><ul>${safety.map(s=>`<li><span class="lvl ${s[0]}"><span class="emo" aria-hidden="true">${icon[s[0]]}</span> ${T().lvl[s[0]]}</span><span>${esc(s[1])}</span></li>`).join("")}</ul></section>`:""}
+    <ol class="steps">${V.p.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol>
+    ${d.p?.[0]?`<div class="tipbox"><b>${t("tip")}:</b> ${esc(d.p[0])}</div>`:""}
+    <div class="ctrls"><button class="btn ghost" type="button" id="rListen">🔊 ${t("listen")}</button><button class="btn" type="button" id="rLog">📅 ${t("logThis")}</button></div></article>`;
+  $("#rLog").onclick=()=>logItem(V.d,V.p.method);
+  $("#rListen").onclick=()=>{ if(!canSpeak) return announce(t("noVoice")); speak($(".readv").innerText.replace(/\n+/g,". ")); };
+}
+$$("dialog [data-close]").forEach(b=>b.onclick=()=>b.closest("dialog").close());
+$("#viewer").addEventListener("close",()=>{ V.playing=false; clearTimeout(V.timer); if(canSpeak) speechSynthesis.cancel(); });
+$$("dialog").forEach(dl=>dl.addEventListener("click",e=>{ if(e.target===dl) dl.close(); }));
+
+/* ===== SETTINGS ===== */
+function seg(name, opts, val){ return `<div class="seg">${opts.map(([v,l])=>`<label><input type="radio" name="${name}" value="${v}" ${String(val)===v?"checked":""}><span>${l}</span></label>`).join("")}</div>`; }
+function sw(id,label,on){ return `<label class="switch" for="${id}"><span>${label}</span><input type="checkbox" role="switch" id="${id}" ${on?"checked":""}></label>`; }
+function renderSettings(keepFocus){
+  const focusedId = keepFocus ? document.activeElement?.id : null;
+  $("#setBody").innerHTML = `
+    <fieldset class="setgrp"><legend>${t("sLang")}</legend>${seg("lang",[["en","English"],["ar","العربية"]],prefs.lang)}</fieldset>
+    <fieldset class="setgrp"><legend>${t("sTheme")}</legend>${seg("theme",[["light","☀️ "+t("light")],["dark","🌙 "+t("dark")],["system","🖥️ "+t("system")]],prefs.theme)}</fieldset>
+    <fieldset class="setgrp"><legend>${t("sSize")}</legend>${seg("size",[["100","A "+t("sizeN")],["118","A+ "+t("sizeL")],["135","A++ "+t("sizeXL")]],prefs.size)}</fieldset>
+    <fieldset class="setgrp"><legend>${t("sAccess")}</legend>${sw("sHC",t("hc"),prefs.contrast)}${sw("sRM",t("rm"),prefs.motion)}${sw("sSP",t("sp"),prefs.spacing)}</fieldset>
+    <fieldset class="setgrp"><legend>🔊 ${t("ra")}</legend>
+      ${sw("sRA",t("ra"),prefs.read)}
+      <p class="muted" style="font-size:.92rem;margin:8px 0">${t("raHelp")}</p>
+      ${prefs.read ? `<p style="font-weight:700;margin:12px 0 6px">${t("raRate")}</p>${seg("rate",[["0.8","🐢 "+t("slow")],["1","▶ "+t("normal")],["1.25","🐇 "+t("fast")]],prefs.rate)}
+      <div class="ctrls" style="justify-content:flex-start"><button class="btn ghost" type="button" id="raTest" data-noread>🔊 ${t("raTest")}</button></div>
+      <p class="muted" style="font-size:.9rem">${t("raOnline")}</p>` : ""}
+    </fieldset>
+    <fieldset class="setgrp"><legend>🤖 ${t("sAI")}</legend>
+      <span class="aimode">${t({claude:"aiModeClaude",key:"aiModeKey",local:"aiModeLocal"}[aiMode()])}</span>
+      ${sample?"":`<p class="muted" style="font-size:.92rem;margin:6px 0">${t("aiHelp")}</p>
+      <label for="sKey" style="font-weight:700">${t("aiKey")}</label>
+      <div class="keyrow"><input id="sKey" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…" value="${esc(apiKey)}" dir="ltr">
+        <button class="btn" type="button" id="sKeySave">${t("aiSave")}</button>${apiKey?`<button class="btn ghost" type="button" id="sKeyDel">${t("aiClear")}</button>`:""}</div>
+      <p class="muted" style="font-size:.88rem;margin:8px 0 0">⚠️ ${t("aiWarn")}</p>`}
+    </fieldset>
+    <button class="btn" type="button" data-close-set style="width:100%">${t("done")}</button>`;
+  $$('#setBody input[type=radio]').forEach(r=>r.onchange=()=>{ prefs[r.name]=r.value; const keep=r.name; if(keep==="rate"){ applyPrefs(); return; } rerenderAll(); $(`#setBody input[name=${keep}]:checked`)?.focus(); announce(keep==="lang"?t("langChanged"):t("themeChanged")); });
+  const map={sHC:"contrast",sRM:"motion",sSP:"spacing"};
+  Object.entries(map).forEach(([id,k])=>$("#"+id).onchange=e=>{ prefs[k]=e.target.checked; applyPrefs(); });
+  $("#sRA").onchange=e=>{ prefs.read=e.target.checked; applyPrefs(); renderSettings(); $("#sRA").focus();
+    if(prefs.read) Reader.say(t("raOn"), null); else { Reader.stop(); announce(t("off")); } };
+  $("#raTest")&&($("#raTest").onclick=()=>Reader.sayItems([{text:t("raTestEn")},{text:t("raTestAr")}]));
+  $("[data-close-set]").onclick=()=>$("#settings").close();
+  $("#sKeySave")&&($("#sKeySave").onclick=()=>{ apiKey=$("#sKey").value.trim(); store.set("ecoloop:apikey",apiKey); renderSettings(); $("#sKeySave").focus(); announce(apiKey?t("aiSaved"):t("aiRemoved")); });
+  $("#sKeyDel")&&($("#sKeyDel").onclick=()=>{ apiKey=""; store.set("ecoloop:apikey",""); renderSettings(); $("#sKey").focus(); announce(t("aiRemoved")); });
+  if(focusedId) $("#"+focusedId)?.focus();
+}
+function voicesChecked(){ return !!(window.speechSynthesis && speechSynthesis.getVoices().length); }
+$("#setBtn").onclick=()=>{ renderSettings(); $("#settings").showModal(); };
+
+/* ===== TRACKER ===== */
+const DEFAULT_HABITS=[{id:"sort",e:"♻️"},{id:"compost",e:"🌱"},{id:"reuse",e:"🛍️"},{id:"up",e:"✨"}];
+let TR = Object.assign({habits:DEFAULT_HABITS, checks:{}, log:[]}, store.get("ecoloop:tracker",{}));
+let weekOffset = 0;
+const saveTR = ()=>store.set("ecoloop:tracker",TR);
+const habitName = h => h.name || t("h_"+h.id);
+function logItem(d, m){
+  TR.log.unshift({id:Date.now()+"", date:dkey(new Date()), mat:d.id||"ai", name:d.n, e:d.e, method:m}); saveTR();
+  announce(t("logged",{x:d.n+" — "+t({recycle:"mRecycle",downcycle:"mDown",upcycle:"mUp"}[m])}));
+  const b=document.activeElement; if(b&&b.tagName==="BUTTON"){ const old=b.innerHTML; b.innerHTML="✓ "+esc(t("logged",{x:""}).replace(/[:：]\s*$/,"")); setTimeout(()=>{ if(b.isConnected) b.innerHTML=old; },1800); }
+}
+function activity(){
+  const a={};
+  for(const [k,v] of Object.entries(TR.checks)) if(v.length) a[k]=(a[k]||0)+v.length;
+  for(const l of TR.log) a[l.date]=(a[l.date]||0)+1;
+  return a;
+}
+function streaks(a){
+  let cur=0, d=new Date(); if(!a[dkey(d)]) d=addDays(d,-1);
+  while(a[dkey(d)]){ cur++; d=addDays(d,-1); }
+  const days=Object.keys(a).sort(); let best=0, run=0, prev=null;
+  for(const k of days){ const dt=new Date(k+"T00:00"); run = prev && dkey(addDays(prev,1))===k ? run+1 : 1; best=Math.max(best,run); prev=dt; }
+  return {cur, best:Math.max(best,cur)};
+}
+function renderTracker(){
+  const a=activity(), {cur,best}=streaks(a), today=new Date(), tk=dkey(today);
+  const month=TR.log.filter(l=>l.date.slice(0,7)===tk.slice(0,7)).length;
+  const start=addDays(today, -today.getDay() + weekOffset*7);
+  const week=[...Array(7)].map((_,i)=>addDays(start,i));
+  const counts={recycle:0,downcycle:0,upcycle:0}; TR.log.forEach(l=>counts[l.method]=(counts[l.method]||0)+1);
+  const maxC=Math.max(1,...Object.values(counts));
+  const B=T().badges, earned={first:Object.keys(a).length>0,s3:best>=3,s7:best>=7,ten:TR.log.length>=10,all:counts.recycle&&counts.downcycle&&counts.upcycle,jift:TR.log.some(l=>l.mat==="jift")};
+  const bEmo={first:"🌱",s3:"🔥",s7:"🏆",ten:"♻️",all:"🌈",jift:"🫒"};
+  // heatmap: 12 weeks ending this week
+  const hStart=addDays(today,-today.getDay()-77); let active=0;
+  const cells=[...Array(84)].map((_,i)=>{ const dt=addDays(hStart,i), k=dkey(dt), n=a[k]||0; if(n&&dt<=today) active++;
+    const lv=dt>today?"":n>=4?"l4":n===3?"l3":n===2?"l2":n===1?"l1":""; return `<i class="${lv} ${k===tk?"t":""}" title="${esc(fmtDate(dt,{day:"numeric",month:"short"}))}: ${n}"></i>`; }).join("");
+  const dayLabel=(dt,o)=>fmtDate(dt,o);
+  $("#page-tracker").innerHTML = `<div class="tgrid">
+    <section class="cards" aria-label="${t("trTitle")}">
+      <div class="card"><div class="v"><span class="emo" aria-hidden="true">🔥</span>${cur}</div><div class="k">${t("curStreak")} · ${cur===1?t("day"):t("days")}</div></div>
+      <div class="card"><div class="v"><span class="emo" aria-hidden="true">🏆</span>${best}</div><div class="k">${t("bestStreak")} · ${best===1?t("day"):t("days")}</div></div>
+      <div class="card"><div class="v"><span class="emo" aria-hidden="true">📆</span>${month}</div><div class="k">${t("monthItems")}</div></div>
+      <div class="card"><div class="v"><span class="emo" aria-hidden="true">🌍</span>${TR.log.length}</div><div class="k">${t("totalItems")}</div></div>
+    </section>
+    <section class="panel" aria-labelledby="hT">
+      <h2 id="hT">${t("habitsTitle")}</h2>
+      <div class="weeknav">
+        <button class="cbtn" type="button" id="wPrev" aria-label="${t("prevWeek")}"><span aria-hidden="true">${prefs.lang==="ar"?"▶":"◀"}</span></button>
+        <span class="lbl">${t("weekOf",{d:fmtDate(week[0],{day:"numeric",month:"long"})})} – ${fmtDate(week[6],{day:"numeric",month:"long"})}</span>
+        ${weekOffset?`<button class="btn ghost" type="button" id="wNow">${t("thisWeek")}</button>`:""}
+        <button class="cbtn" type="button" id="wNext" aria-label="${t("nextWeek")}" ${weekOffset>=0?"disabled":""}><span aria-hidden="true">${prefs.lang==="ar"?"◀":"▶"}</span></button>
+      </div>
+      <div class="tscroll"><table class="habits">
+        <caption class="sr">${t("habitsTitle")}</caption>
+        <thead><tr><th scope="col" style="text-align:start;padding-inline-start:14px">${t("habitCol")}</th>${week.map(dt=>`<th scope="col" class="${dkey(dt)===tk?"today":""}"><abbr title="${esc(dayLabel(dt,{weekday:"long",day:"numeric",month:"long"}))}" style="text-decoration:none">${esc(dayLabel(dt,{weekday:"short"}))}<br>${dt.getDate()}</abbr></th>`).join("")}<th scope="col">${t("doneCol")}</th></tr></thead>
+        <tbody>${TR.habits.map(h=>{ let done=0; const tds=week.map(dt=>{ const k=dkey(dt), on=(TR.checks[k]||[]).includes(h.id); if(on) done++; const future=dt>today;
+            return `<td class="${k===tk?"today":""}"><label class="chk"><input type="checkbox" data-h="${h.id}" data-d="${k}" ${on?"checked":""} ${future?"disabled":""} aria-label="${esc(t("checkLabel",{h:habitName(h),d:dayLabel(dt,{weekday:"long",day:"numeric",month:"long"})}))}"><span aria-hidden="true"></span></label></td>`; }).join("");
+          return `<tr><th scope="row"><div class="hrow"><span class="emo" aria-hidden="true">${h.e||"✅"}</span><span>${esc(habitName(h))}</span>${h.name?`<button class="delh" type="button" data-delh="${h.id}" aria-label="${esc(t("removeHabit",{x:h.name}))}">✕</button>`:""}</div></th>${tds}
+            <td><div class="prog"><div class="b" aria-hidden="true"><i style="width:${done/7*100}%"></i></div><small>${done}/7</small></div></td></tr>`; }).join("")}</tbody>
+      </table></div>
+      <form class="addh" id="addH"><label for="newH" class="sr">${t("addHabitLabel")}</label><input id="newH" maxlength="60" placeholder="${esc(t("addHabitPh"))}"><button class="btn" type="submit">＋ ${t("addHabit")}</button></form>
+    </section>
+    <div class="two">
+      <section class="panel" aria-labelledby="hmT"><h2 id="hmT">${t("heatTitle")}</h2>
+        <p class="sr">${t("heatSummary",{a:active})}</p>
+        <div class="heat" aria-hidden="true">${cells}</div>
+        <div class="legend" aria-hidden="true">${t("less")} <i style="background:var(--heat0)"></i><i style="background:var(--heat1)"></i><i style="background:var(--heat2)"></i><i style="background:var(--heat3)"></i><i style="background:var(--heat4)"></i> ${t("more")}</div>
+        <p class="muted" style="margin:10px 0 0">${t("heatSummary",{a:active})}</p>
+        <h3 style="margin:20px 0 6px;font-size:1.05rem">${t("methodsTitle")}</h3>
+        ${[["recycle","mRecycle","♻️"],["downcycle","mDown","⬇️"],["upcycle","mUp","✨"]].map(([k,l,e])=>`<div class="mbar"><span><span class="emo" aria-hidden="true">${e}</span> ${t(l)}</span><div class="b" aria-hidden="true"><i style="width:${counts[k]/maxC*100}%"></i></div><b>${counts[k]}</b></div>`).join("")}
+      </section>
+      <section class="panel" aria-labelledby="bT"><h2 id="bT">${t("badgesTitle")}</h2>
+        <ul class="badges">${Object.keys(B).map(k=>`<li class="badge ${earned[k]?"":"off"}"><span class="emo" aria-hidden="true">${bEmo[k]}</span><b>${B[k][0]}</b><small>${B[k][1]}</small><span class="st">${earned[k]?t("earned"):t("locked")}</span></li>`).join("")}</ul>
+      </section>
+    </div>
+    <section class="panel" aria-labelledby="rT"><h2 id="rT">${t("recentTitle")}</h2>
+      ${TR.log.length?`<ul class="loglist">${TR.log.slice(0,15).map(l=>`<li><span class="emo" aria-hidden="true">${esc(l.e)}</span><div class="meta"><b>${esc(MATS.find(m=>m.id===l.mat)?.[prefs.lang].n||l.name)}</b><small>${t({recycle:"mRecycle",downcycle:"mDown",upcycle:"mUp"}[l.method])} · ${esc(fmtDate(new Date(l.date+"T00:00"),{weekday:"short",day:"numeric",month:"short"}))}</small></div><button class="delh" type="button" data-dell="${l.id}" aria-label="${esc(t("del",{x:MATS.find(m=>m.id===l.mat)?.[prefs.lang].n||l.name}))}">✕</button></li>`).join("")}</ul>`:`<p class="muted">${t("emptyLog")}</p>`}
+      <button class="linkbtn" type="button" id="resetTR">${t("reset")}</button>
+    </section></div>`;
+  $$("#page-tracker input[data-h]").forEach(c=>c.onchange=()=>{ const k=c.dataset.d, list=new Set(TR.checks[k]||[]); c.checked?list.add(c.dataset.h):list.delete(c.dataset.h); TR.checks[k]=[...list]; saveTR(); const id=c.dataset.h+k; renderTracker(); $(`#page-tracker input[data-h="${c.dataset.h}"][data-d="${k}"]`)?.focus(); });
+  $("#wPrev").onclick=()=>{ weekOffset--; renderTracker(); $("#wPrev").focus(); };
+  $("#wNext").onclick=()=>{ if(weekOffset<0){ weekOffset++; renderTracker(); ($("#wNext").disabled?$("#wPrev"):$("#wNext")).focus(); } };
+  $("#wNow")&&($("#wNow").onclick=()=>{ weekOffset=0; renderTracker(); $("#wPrev").focus(); });
+  $("#addH").onsubmit=e=>{ e.preventDefault(); const v=$("#newH").value.trim(); if(!v) return; TR.habits.push({id:"c"+Date.now(),e:"✅",name:v}); saveTR(); renderTracker(); $("#newH").focus(); };
+  $$("[data-delh]").forEach(b=>b.onclick=()=>{ TR.habits=TR.habits.filter(h=>h.id!==b.dataset.delh); saveTR(); renderTracker(); $("#newH").focus(); });
+  $$("[data-dell]").forEach(b=>b.onclick=()=>{ TR.log=TR.log.filter(l=>l.id!==b.dataset.dell); saveTR(); renderTracker(); $("#rT").focus?.(); });
+  $("#resetTR").onclick=()=>{ if(confirm(t("resetQ"))){ TR={habits:DEFAULT_HABITS,checks:{},log:[]}; saveTR(); renderTracker(); announce(t("resetDone")); } };
+}
+
+/* ===== AI AGENT ===== */
+let sample=null, aiChecked=false;
+(async()=>{ try{ sample = window.claude ? await claude.use("sample") : null; }catch(e){ sample=null; } aiChecked=true; applyPrefs(); if(current) render(current,false); if($("#settings").open) renderSettings(); })();
+let apiKey = store.get("ecoloop:apikey","");
+const aiMode = () => sample ? "claude" : apiKey ? "key" : "local";
+
+/* Direct Claude API call with the viewer's own key (works on your own website; blocked inside the Claude preview, where `sample` is used instead) */
+async function keyCall(prompt, quick){
+  const r = await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
+    headers:{"content-type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model:quick?"claude-haiku-5-5":"claude-sonnet-5-5",max_tokens:quick?600:1800,messages:[{role:"user",content:prompt}]})});
+  if(!r.ok){ const e=new Error("api "+r.status); e.code = r.status===401||r.status===403 ? "bad_key" : r.status===429 ? "rate_limited" : "api"; throw e; }
+  const j = await r.json();
+  return (j.content||[]).map(c=>c.text||"").join("");
+}
+function parseJSON(text){
+  const s = String(text).replace(/```json|```/g,"");
+  const a = s.indexOf("{"), b = s.lastIndexOf("}");
+  return JSON.parse(a>=0 && b>a ? s.slice(a,b+1) : s);
+}
+
+/* ----- Built-in offline agent ----- */
+const SYN = {
+  pet:"bottle bottles water juice soda yogurt shampoo container containers plastic tub tubs pot قنينة عبوات زجاجة_بلاستيك لبن علبة_لبن",
+  paper:"book books notebook newspaper magazine envelope letter flyer homework كتاب كتب دفتر جريدة مجلة ورقة اوراق",
+  card:"box boxes carton packaging shoebox cereal parcel delivery amazon كرتون صندوق كرتونة علبة_كرتون",
+  pizza:"pizza greasy takeaway",
+  banana:"food fruit vegetable peel peels scraps apple orange egg eggs shells bread leftovers onion potato leaves garden grass rice طعام فواكه خضار قشر قشور بقايا خبز تفاح برتقال بيض اوراق_شجر",
+  batt:"battery batteries powerbank power cell aa aaa بطارية بطاريات باور",
+  jar:"jar jars jam honey pickle sauce مرطبان مربى عسل مخلل",
+  can:"tin tins aluminium aluminum foil metal spray aerosol soda can cans tuna علبة_معدن علب تنك المنيوم قصدير معدن",
+  bag:"bag bags wrapper wrappers film cling wrap packet chips snack sachet نايلون كيس اكياس اغلفة شيبس",
+  phone:"phone laptop computer tablet charger cable cables headphones earphones keyboard mouse tv television remote electronics printer router camera console wire wires ink toner cartridge cartridges كمبيوتر لابتوب شاحن سماعات تلفزيون جهاز اجهزة كهرباء اسلاك",
+  bulb:"bulb lamp tube fluorescent led light lights مصباح لمبة ضوء نيون",
+  eps:"foam styrofoam polystyrene tray trays packing فلين ستايروفوم صينية",
+  cloth:"shirt tshirt jeans shoes shoe socks jacket dress clothes trousers towel blanket sheet curtain coat sweater hijab sneakers trainers boots sandals ملابس قميص بنطلون حذاء احذية جوارب جاكيت فستان منشفة بطانية ستارة",
+  med:"medicine medicines pills tablets syrup inhaler needle needles syringe thermometer drugs vitamins دواء ادوية حبوب شراب ابرة حقنة مقياس_حرارة",
+  carton:"tetra milk juicebox كرتونة_حليب كرتونة_عصير حليب",
+  tea:"tea coffee grounds capsule capsules teabag شاي قهوة تفل كبسولة",
+  tissue:"napkin napkins diaper diapers nappy wipes kitchen roll paper_towel منديل مناديل حفاض حفاضات محارم",
+  paint:"paint chemicals chemical oil motor cleaner cleaning bleach pesticide polish solvent glue thinner gas صبغة دهان مواد_كيميائية زيت منظف كلور مبيد غراء",
+  jift:"olive olives pomace pits zibar زيتون جفت زيبار عجم",
+  fabric:"fabric scraps sewing thread yarn wool umbrella قماش خيوط صوف مظلة شمسية",
+  pcup:"paper cup cups coffee_cup كاسة كاسات كوب_ورق",
+  straw:"straw straws lid lids شفاطة شفاطات غطاء اغطية",
+  cutlery:"spoon spoons fork forks knife knives cutlery plate plates disposable ملعقة ملاعق شوكة شوك صحون",
+  glass:"glass broken window mirror perfume vase زجاج مكسور مراية عطر مزهرية",
+  acc:"jewelry jewellery watch ring necklace earrings bracelet accessories gold silver مجوهرات ساعة خاتم قلادة اسوارة حلق ذهب فضة اكسسوارات"
+};
+const STOP = new Set(tok0("broken old used empty dirty clean new small big large little my our a an the some piece pieces bit bits thing things stuff item items of with for and or to from in on half full wet torn cracked damaged مكسور مكسوره قديم قديمه مستعمل مستعمله فارغ فارغه جديد صغير كبير قطعه قطع شي اشياء غرض اغراض من في على مع او و ال تالف تالفه ممزق"));
+function tok0(s){ return norm(s).replace(/_/g," ").split(/[^\p{L}\p{N}]+/u).map(w=>/^ال/.test(w)&&w.length>4?w.slice(2):w).filter(w=>w.length>1); }
+const tok = s => tok0(s).filter(w=>!STOP.has(w));
+function localMatch(text){
+  const q = tok(text); if(!q.length) return null;
+  let best=null, bestS=0;
+  for(const m of MATS){
+    const names = tok([m.en.n,m.ar.n].join(" ")), keys = tok([m.en.k,m.ar.k,m.en.m,m.ar.m].join(" ")), syn = tok(SYN[m.id]||"");
+    let s=0;
+    for(const w of q){
+      const hit = list => list.some(x=>x===w || (w.length>=4 && x.startsWith(w)) || (x.length>=3 && (w===x+"s"||w===x+"es"||w===x+"ات"||w===x+"ين")));
+      if(hit(names)) s+=3; else if(hit(syn)) s+=2; else if(hit(keys)) s+=1.5;
+    }
+    if(s>bestS){ bestS=s; best=m; }
+  }
+  return best;
+}
+function genericData(text){
+  const ar = prefs.lang==="ar";
+  return ar ? {e:"🔎",n:text,m:t("offGenericM"),
+    s:[["m","ابحث على الملصق عن رموز الخطر (لهب، جمجمة، مادة أكّالة). إن وجدتها فسلّمه لنقطة نفايات خطرة."],["m","إن كان فيه بطارية أو قابس أو سلك فهو نفايات إلكترونية، لا تضعه في الحاوية العادية."],["l","لا تحرق أي غرض للتخلص منه، فالدخان قد يكون سامًا."]],
+    r:{sum:"افصل الغرض إلى مواده (بلاستيك، معدن، ورق، زجاج) وأعد تدوير كل جزء في مكانه.",steps:["أفرغه ونظّفه.","افصل الأجزاء المختلفة إن أمكن.","ضع كل جزء في الحاوية المناسبة حسب تعليمات بلديتك."],fmt:"text"},
+    d:{sum:"الأجزاء التي لا تُقبل للتدوير يمكن استخدامها لأغراض أبسط.",steps:["استخدم القطع كحشوة أو مواد تغليف.","اسأل محلات الخردة أو التصليح إن كانت تقبله."],fmt:"text"},
+    u:[{t:"أصلحه أو تبرّع به",steps:["تحقق إن كان يمكن تصليحه.","إن كان صالحًا فتبرّع به أو بِعه بدل رميه."],fmt:"text"}],
+    st:[],p:["إطالة عمر الأغراض تقلل النفايات والحاجة لمواد خام جديدة."],g:"يدعم الهدف 12 للأمم المتحدة (الاستهلاك والإنتاج المسؤولان)."}
+  : {e:"🔎",n:text,m:t("offGenericM"),
+    s:[["m","Check the label for hazard symbols (flame, skull, corrosive). If you see one, take it to a hazardous-waste point."],["m","Anything with a battery, plug or cable is e-waste — keep it out of the normal bin."],["l","Never burn an item to get rid of it; the smoke can be toxic."]],
+    r:{sum:"Split the item into its materials (plastic, metal, paper, glass) and recycle each part where it's accepted.",steps:["Empty and clean it.","Separate different materials if you can.","Put each part in the right bin following your municipality's rules."],fmt:"text"},
+    d:{sum:"Parts that can't be recycled can often still be used for something simpler.",steps:["Use pieces as padding or packing material.","Ask scrap or repair shops if they take it."],fmt:"text"},
+    u:[{t:"Repair or donate it",steps:["Check whether it can be fixed.","If it still works, donate or sell it instead of throwing it away."],fmt:"text"}],
+    st:[],p:["Making things last longer cuts waste and the need for new raw materials."],g:"Supports UN Goal 12 (responsible consumption)."};
+}
+function localAgent(text, failed){
+  const m = localMatch(text);
+  let data, note;
+  if(m){
+    const v = vm({id:m.id});
+    data = Object.assign({}, v, {n:text.charAt(0).toUpperCase()+text.slice(1), m:`${v.n} · ${v.m}`, local:true});
+    note = t("offNote",{x:`${v.e} ${v.n}`});
+  } else { data = Object.assign(genericData(text),{local:true}); note = t("offNote",{x:t("offGenericN")}); }
+  if(failed) note = t("offFail")+" "+note;
+  else if(aiMode()==="local") note += t("offNoteKey");
+  data.note = note;
+  return data;
+}
+function localAnswer(d, q){
+  const s = norm(q), has = re => re.test(s);
+  const list = a => a.map(x=>"• "+x).join("\n");
+  const safety = (d.s||[]).map(x=>x[1]);
+  if(has(/kid|child|children|son|daughter|class|school|طفل|اطفال|ابن|بنت|صف|مدرس|طلاب/)) return safety.length ? t("la_kids")+"\n"+list(safety) : t("la_kidsNone");
+  if(has(/tool|need|supplies|material|equipment|ادوات|اداة|احتاج|مواد|لوازم/)) return d.u?.length ? t("la_tools",{x:d.u[0].t})+"\n"+list(d.u[0].steps) : t("la_noTools")+"\n"+list(d.r.steps);
+  if(has(/safe|danger|hazard|risk|burn|fire|toxic|harm|امن|خطر|خطير|حريق|سام|ضرر|يحرق/)) return safety.length ? t("la_safe")+"\n"+list(safety) : t("la_safeNone");
+  if(has(/why|benefit|environment|planet|impact|good|لماذا|فائدة|فوائد|بيئة|كوكب|اثر/)) return t("la_why")+"\n"+list([...(d.st||[]).map(x=>x[0]+" "+x[1]), ...(d.p||[])]);
+  if(has(/where|bin|throw|dispose|put|recycle|اين|حاوية|ارمي|اتخلص|اضع|تدوير/)) return t("la_where")+" "+d.r.sum+"\n"+list(d.r.steps);
+  if(has(/idea|make|craft|upcycle|diy|art|create|فكرة|افكار|اصنع|اعمل|ابداع|يدوي/)) return d.u?.length ? t("la_ideas")+"\n"+d.u.map(u=>"• "+u.t+": "+u.steps.join(" ")).join("\n") : t("la_noIdeas");
+  return t("la_def")+" "+d.r.sum+"\n"+list(d.r.steps)+(safety.length?"\n\n"+t("la_safe")+"\n"+list(safety.slice(0,2)):"");
+}
+
+const PROMPT = (item,lang) => `You are EcoLoop, an environmental-sustainability agent. A user wants to dispose of or reuse this item: "${item}".
+Write ALL text values in ${lang==="ar"?"Modern Standard Arabic":"plain, simple English"}.
+Return ONLY a JSON object, no markdown, with exactly this shape:
+{"name":"short item name","material":"main material(s)","emoji":"one emoji that best depicts the item",
+"safety":[{"level":"h|m|l","text":"safety point to know BEFORE handling"}],
+"recycle":{"summary":"1 sentence","steps":["2-4 short steps"],"format":"video|photo|text"},
+"downcycle":{"summary":"1 sentence","steps":["1-3 short steps"],"format":"video|photo|text"},
+"upcycle":[{"title":"idea name","steps":["2-3 short steps"],"format":"video|photo|text"}],
+"stats":[{"v":"short figure e.g. ≈60%","l":"what it means"}],"benefits":["2-3 environmental benefits"],"goals":"which UN Sustainable Development Goals it supports, one sentence"}
+Rules: 2-4 safety points; real hazards (fire, toxic fumes, carbon monoxide, sharp edges, chemicals, mercury) are level h. 1-2 upcycle ideas; if upcycling is unsafe (hazardous waste) return an empty array. "format" is the medium that best teaches that procedure: video for hands-on techniques, photo for visual/design ideas, text for rules and processes. Exactly 2 stats using widely cited figures, marking estimates with ≈. Consider a Jordan / Middle East context where relevant.`;
+function showResult(html){
+  const res=$("#result"); res.innerHTML=html;
+  res.scrollIntoView({behavior:reduceMotion()?"auto":"smooth",block:"start"});
+}
+function setHint(msg, isErr){
+  const h=$("#hint"); h.textContent=msg||t(sample?"hint":"hintNoAI");
+  h.style.color = isErr ? "#FFD3CE" : ""; h.style.fontWeight = isErr ? "700" : "";
+}
+async function askAgent(){
+  const text=$("#q").value.trim(); if(!text){ $("#q").focus(); return; }
+  // 1) exact name, or only one matching tile -> open it straight away
+  const f=norm(text);
+  const exact=MATS.find(m=>norm(m.en.n)===f||norm(m.ar.n)===f);
+  const hits=MATS.filter(m=>norm([m.en.n,m.en.k,m.en.m,m.ar.n,m.ar.k].join(" ")).includes(f));
+  const pick=exact||(hits.length===1?hits[0]:null);
+  if(pick){ setHint(); current={id:pick.id}; drawGrid($("#q").value); render(current,true); return; }
+  // 2) no AI available -> built-in offline agent
+  const mode = aiMode();
+  if(mode==="local"){ setHint(); current=null; drawGrid($("#q").value); render({ai:true,data:localAgent(text)},true); return; }
+  // 3) Claude (inside the app) or the viewer's own API key
+  const btn=$("#askBtn"), label=btn.textContent;
+  btn.disabled=true; btn.textContent = prefs.lang==="ar" ? "جارٍ التحليل…" : "Analysing…";
+  setHint(t("analysing",{x:text}));
+  showResult(`<div class="panel status" role="status"><span class="dot" aria-hidden="true"></span><span>${esc(t("analysing",{x:text}))}</span></div>`);
+  try{
+    const j = mode==="claude" ? await sample.json(PROMPT(text,prefs.lang),{modelTier:"default"}) : parseJSON(await keyCall(PROMPT(text,prefs.lang), false));
+    const data={e:j.emoji||"♻️",n:j.name||text,m:j.material||"",s:(j.safety||[]).map(s=>[String(s.level||"l")[0],s.text]),
+      r:{sum:j.recycle?.summary||"",steps:j.recycle?.steps||[],fmt:j.recycle?.format||"text"},
+      d:{sum:j.downcycle?.summary||"",steps:j.downcycle?.steps||[],fmt:j.downcycle?.format||"text"},
+      u:(j.upcycle||[]).map(u=>({t:u.title,steps:u.steps||[],fmt:u.format||"photo"})),
+      st:(j.stats||[]).map(s=>[s.v,s.l]),p:j.benefits||[],g:j.goals||""};
+    setHint(); current=null; drawGrid($("#q").value); render({ai:true,data},true);
+  }catch(e){
+    console.error("EcoLoop agent error:", e);
+    if(e?.code==="bad_key") setHint(t("errKey"), true);
+    else if(e?.code==="rate_limited") setHint(t("errRate"), true);
+    else setHint();
+    current=null; render({ai:true,data:localAgent(text, true)},true);   // never leave the user empty-handed
+  }finally{ btn.disabled=false; btn.textContent=label; }
+}
+$("#searchForm").addEventListener("submit",e=>{ e.preventDefault(); askAgent(); });
+async function followUp(){
+  const inp=$("#fu"), out=$("#fuOut"), btn=$("#fuBtn"), q=inp.value.trim(); if(!q) return;
+  const d=vm(current), mode=aiMode();
+  const box=document.createElement("div"); box.className="answer";
+  const local = (pre) => { out.innerHTML=""; out.appendChild(box); box.textContent = (pre?pre+"\n\n":"") + "🌿 "+t("fuLocal")+":\n"+localAnswer(d,q); };
+  if(mode==="local"){ local(); return; }
+  btn.disabled=true; out.innerHTML=`<div class="status" role="status"><span class="dot" aria-hidden="true"></span>${t("thinking")}</div>`;
+  const prompt = `You are EcoLoop, a sustainability agent. Item: ${d.n} (${d.m}). Safety notes: ${(d.s||[]).map(s=>s[1]).join(" | ")}.
+User question: ${q}
+Answer in ${prefs.lang==="ar"?"Modern Standard Arabic":"simple English"}, plain text, under 150 words, practical, and mention any safety caveat that applies. No markdown.`;
+  try{
+    let text;
+    if(mode==="claude"){
+      ({text} = await sample(prompt,{modelTier:"quick",cache:false,onText:({text})=>{ if(!box.isConnected){ out.innerHTML=""; out.appendChild(box); } box.textContent=text; }}));
+    } else text = await keyCall(prompt, true);
+    if(!box.isConnected){ out.innerHTML=""; out.appendChild(box); } box.textContent=text;
+  }catch(e){ local(e?.code==="bad_key" ? t("errKey") : t("offFail")); }
+  finally{ btn.disabled=false; }
+}
+
+/* ===== QUIZ & PLAY (Gimkit-style) ===== */
+const UPS = {
+  per:   {e:"💰", vals:[10,20,35,60,100,150], costs:[0,60,160,380,800,1500]},
+  streak:{e:"🔥", vals:[0,2,5,10,20],         costs:[0,80,220,500,1000]},
+  shield:{e:"🛡️", vals:[5,3,1,0],             costs:[0,70,200,450]}
+};
+const UPK = {per:["upPer","upPerD"], streak:["upStreak","upStreakD"], shield:["upShield","upShieldD"]};
+const GAME_COST = 50, GAME_REWARD = 2;
+let PL = Object.assign({pts:0,streak:0,correct:0,answered:0,best:0,up:{per:0,streak:0,shield:0}}, store.get("ecoloop:play",{}));
+PL.up = Object.assign({per:0,streak:0,shield:0}, PL.up);
+const savePL = ()=>store.set("ecoloop:play",PL);
+const upVal = k => UPS[k].vals[PL.up[k]];
+
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const pick = a => a[Math.floor(Math.random()*a.length)];
+
+let QZ = null;   // current question
+let lastKind = null;
+function makeQuestion(){
+  const L = prefs.lang;
+  const kinds = shuffle(["stat","stat","who","level","high"]).filter(k=>k!==lastKind);
+  for(const kind of kinds){ const q = buildQ(kind, L); if(q){ lastKind = kind; return q; } }
+  return buildQ("stat", L);
+}
+function buildQ(kind, L){
+  if(kind==="stat"){
+    const all = MATS.flatMap(m=>m[L].st.map(s=>({m, v:s[0], l:s[1]}))).filter(x=>/\d/.test(x.v));
+    const c = pick(all), pct = c.v.includes("%");
+    let pool = [...new Set(all.filter(x=>x.v!==c.v && x.v.includes("%")===pct).map(x=>x.v))];
+    if(pool.length<3) pool = [...new Set(all.filter(x=>x.v!==c.v).map(x=>x.v))];
+    const opts = shuffle([c.v, ...shuffle(pool).slice(0,3)]);
+    return {kind, L, prompt:t("qStat",{n:`${c.m.e} ${c.m[L].n}`}), fact:`<b>___</b> ${esc(c.l)}`,
+      opts, ans:c.v, explain:`${c.v} ${c.l}`};
+  }
+  if(kind==="who"){
+    const m = pick(MATS.filter(x=>x[L].s.length)), s = pick(m[L].s);
+    const others = shuffle(MATS.filter(x=>x.id!==m.id)).slice(0,3);
+    const lab = x => `${x.e} ${x[L].n}`;
+    return {kind, L, prompt:t("qWho"), fact:`“${esc(s[1])}”`, opts:shuffle([lab(m),...others.map(lab)]), ans:lab(m), explain:lab(m)};
+  }
+  if(kind==="level"){
+    const m = pick(MATS), s = pick(m[L].s); if(!s) return null;
+    const names = T().lvl, icon = {h:"⛔",m:"⚠️",l:"ℹ️"};
+    const lab = k => `${icon[k]} ${names[k]}`;
+    return {kind, L, prompt:t("qLevel"), fact:`${m.e} ${esc(m[L].n)}: “${esc(s[1])}”`, opts:["h","m","l"].map(lab), ans:lab(s[0]), explain:lab(s[0])};
+  }
+  if(kind==="high"){
+    const highs = MATS.flatMap(m=>m[L].s.filter(s=>s[0]==="h").map(s=>({m,s})));
+    const lows  = MATS.flatMap(m=>m[L].s.filter(s=>s[0]==="l").map(s=>({m,s})));
+    if(!highs.length || lows.length<3) return null;
+    const c = pick(highs), d = shuffle(lows.filter(x=>x.m.id!==c.m.id)).slice(0,3);
+    const lab = x => `${x.m.e} ${x.s[1]}`;
+    return {kind, L, prompt:t("qHigh"), fact:"", opts:shuffle([lab(c),...d.map(lab)]), ans:lab(c), explain:lab(c)};
+  }
+  return null;
+}
+
+/* Bin Blitz items */
+const GITEMS = [
+  ["🧴","Plastic bottle","عبوة بلاستيكية","rec"],["📄","Office paper","ورق مكتبي","rec"],["📦","Cardboard box","صندوق كرتون","rec"],
+  ["🥫","Drink can","علبة مشروب","rec"],["🍾","Glass bottle","زجاجة","rec"],["🫙","Glass jar","مرطبان زجاجي","rec"],["📰","Newspaper","جريدة","rec"],
+  ["🍌","Banana peel","قشرة موز","comp"],["🍵","Tea leaves","أوراق شاي","comp"],["🍎","Apple core","بقايا تفاحة","comp"],
+  ["🥚","Egg shells","قشر البيض","comp"],["🥬","Vegetable scraps","بقايا خضار","comp"],["☕","Coffee grounds","تفل القهوة","comp"],
+  ["🔋","Battery","بطارية","haz"],["💡","Energy-saving bulb","مصباح موفّر للطاقة","haz"],["🎨","Leftover paint","بقايا دهان","haz"],
+  ["💊","Old medicine","أدوية قديمة","haz"],["📱","Old phone","هاتف قديم","haz"],["🧪","Bleach bottle (full)","عبوة كلور ممتلئة","haz"],
+  ["🤧","Used tissue","منديل مستعمل","gen"],["🥤","Foam cup","كوب فلين","gen"],["🧾","Shiny receipt","إيصال لامع","gen"],["🍕","Greasy pizza slice box","علبة بيتزا مليئة بالدهون","gen"]
+];
+const BINS = [["rec","♻️","binRec"],["comp","🌱","binComp"],["haz","☣️","binHaz"],["gen","🗑️","binGen"]];
+const binName = k => t(BINS.find(b=>b[0]===k)[2]);
+const giName = it => prefs.lang==="ar" ? it[2] : it[1];
+let G = {mode:"hub"};   // hub | play | over
+
+function renderPlay(){
+  const page = $("#page-play");
+  if(G.mode==="play"){ renderGame(); return; }
+  if(G.mode==="over"){ renderOver(); return; }
+  if(!QZ || QZ.L!==prefs.lang){ QZ = makeQuestion(); }
+  const kindL = {stat:"kStat",who:"kWho",level:"kLevel",high:"kHigh"}[QZ.kind];
+  const canPlay = PL.pts >= GAME_COST;
+  page.innerHTML = `<div class="tgrid">
+    <section class="cards" aria-label="${t("plTitle")}">
+      <div class="card"><div class="v"><span class="emo" aria-hidden="true">🪙</span><span id="ptsV">${PL.pts}</span></div><div class="k">${t("ptsLabel")}</div></div>
+      <div class="card"><div class="v"><span class="emo" aria-hidden="true">🔥</span>${PL.streak}</div><div class="k">${t("streakLabel")}</div></div>
+      <div class="card"><div class="v"><span class="emo" aria-hidden="true">✅</span>${PL.correct}</div><div class="k">${t("correctLabel")}</div></div>
+      <div class="card"><div class="v"><span class="emo" aria-hidden="true">🏆</span>${PL.best}</div><div class="k">${t("bestLabel")}</div></div>
+    </section>
+    <div class="qwrap">
+      <section class="panel" aria-labelledby="qP" id="quizBox">
+        <div class="qmeta"><span class="qkind">${t(kindL)}</span><span class="muted" style="font-size:.9rem">+${upVal("per")} 🪙</span></div>
+        <h2 class="qprompt" id="qP">${esc(QZ.prompt)}</h2>
+        ${QZ.fact?`<p class="qfact">${QZ.fact}</p>`:""}
+        <ul class="qopts">${QZ.opts.map((o,i)=>`<li><button type="button" class="qopt c${i}" data-o="${i}"><span class="k" aria-hidden="true">${i+1}</span><span>${esc(o)}</span></button></li>`).join("")}</ul>
+        <div id="qFb" aria-live="polite"></div>
+      </section>
+      <div class="side">
+        <section class="gamecard" aria-labelledby="gT">
+          <h2 id="gT"><span class="emo" aria-hidden="true">🗑️</span>${t("gTitle")}</h2>
+          <p>${t("gDesc",{c:GAME_COST,r:GAME_REWARD})}</p>
+          <button class="btn" type="button" id="gStart" ${canPlay?"":"disabled"}>🎮 ${t("gPlay",{c:GAME_COST})}</button>
+          ${canPlay?"":`<p class="need">${t("gNeed",{c:GAME_COST-PL.pts})}</p>`}
+        </section>
+        <section class="panel" aria-labelledby="shT">
+          <h2 id="shT">🛒 ${t("shopTitle")}</h2>
+          <ul class="shop">${Object.keys(UPS).map(k=>{ const u=UPS[k], lv=PL.up[k], max=lv>=u.vals.length-1, cost=max?0:u.costs[lv+1];
+            const next = max ? u.vals[lv] : u.vals[lv+1];
+            return `<li><div class="top2"><span class="emo" aria-hidden="true">${u.e}</span><div><b>${t(UPK[k][0])}</b><small>${t(UPK[k][1],{v:next})}</small></div></div>
+              <div class="pips" role="img" aria-label="${t("upLvl",{i:lv+1,n:u.vals.length})}">${u.vals.map((_,i)=>`<i class="${i<=lv?"on":""}"></i>`).join("")}</div>
+              <button class="btn ${max||PL.pts<cost?"ghost":""}" type="button" data-up="${k}" ${max||PL.pts<cost?"disabled":""}>${max?t("maxed"):t("buy",{c:cost})}</button></li>`; }).join("")}</ul>
+        </section>
+      </div>
+    </div></div>`;
+  $$("#quizBox .qopt").forEach(b=>b.onclick=()=>answerQ(+b.dataset.o));
+  $$("[data-up]").forEach(b=>b.onclick=()=>buyUp(b.dataset.up));
+  $("#gStart").onclick=startGame;
+  if(QZ.done) showFeedback();
+}
+function answerQ(i){
+  if(QZ.done) return;
+  QZ.done = true; QZ.picked = i;
+  const ok = QZ.opts[i]===QZ.ans;
+  PL.answered++;
+  if(ok){
+    const bonus = upVal("streak")*Math.min(PL.streak,10);
+    QZ.gain = upVal("per") + bonus; QZ.bonus = bonus;
+    PL.pts += QZ.gain; PL.streak++; PL.correct++;
+  } else {
+    QZ.loss = Math.min(PL.pts, upVal("shield")); PL.pts -= QZ.loss; PL.streak = 0;
+  }
+  QZ.ok = ok; savePL(); renderPlay();
+  $("#qNext")?.focus();
+  announce($("#qFb")?.innerText||"");
+}
+function showFeedback(){
+  $$("#quizBox .qopt").forEach((b,i)=>{ b.disabled=true; if(QZ.opts[i]===QZ.ans) b.classList.add("right"); if(i===QZ.picked) b.classList.add("picked"); });
+  const fb = $("#qFb");
+  fb.innerHTML = QZ.ok
+    ? `<div class="qfb ok"><span class="emo pop" aria-hidden="true">🎉</span><div class="grow">${t("qRight",{p:QZ.gain})}${QZ.bonus?` <small>${t("qStreakB",{b:QZ.bonus})}</small>`:""}<small>${esc(QZ.explain)}</small></div><button class="btn" type="button" id="qNext">${t("qNext")} →</button></div>`
+    : `<div class="qfb no"><span class="emo" aria-hidden="true">🙈</span><div class="grow">${t("qWrong")}${QZ.loss?` (${t("qPen",{p:QZ.loss})})`:""}<small>${esc(t("qAns",{a:QZ.explain}))}</small></div><button class="btn" type="button" id="qNext">${t("qNext")} →</button></div>`;
+  $("#qNext").onclick=()=>{ QZ = makeQuestion(); renderPlay(); $("#qP")?.focus?.(); $$("#quizBox .qopt")[0]?.focus(); };
+}
+function buyUp(k){
+  const u=UPS[k], lv=PL.up[k]; if(lv>=u.vals.length-1) return;
+  const cost=u.costs[lv+1]; if(PL.pts<cost) return;
+  PL.pts-=cost; PL.up[k]++; savePL(); renderPlay();
+  announce(t("bought",{x:t(UPK[k][0])})); $(`[data-up="${k}"]`)?.focus();
+}
+document.addEventListener("keydown", e=>{
+  if($("#page-play").hidden || e.ctrlKey || e.metaKey || e.altKey) return;
+  if(/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName) || document.querySelector("dialog[open]")) return;
+  const n = parseInt(e.key,10); if(!(n>=1 && n<=4)) return;
+  if(G.mode==="play"){ e.preventDefault(); sortInto(BINS[n-1][0]); }
+  else if(G.mode==="hub" && QZ && !QZ.done && n<=QZ.opts.length){ e.preventDefault(); answerQ(n-1); }
+});
+
+/* ----- Bin Blitz ----- */
+function startGame(){
+  if(PL.pts<GAME_COST) return;
+  PL.pts-=GAME_COST; savePL();
+  G = {mode:"play", score:0, lives:3, speed:.2, y:0, item:null, paused:false, last:0, msg:null, raf:0, lastItem:null};
+  nextItem(); renderPlay(); loop();
+  $("#page-play").scrollIntoView({behavior:reduceMotion()?"auto":"smooth",block:"start"});
+}
+function nextItem(){
+  let it; do{ it = pick(GITEMS); } while(GITEMS.length>1 && it===G.lastItem);
+  G.item = it; G.lastItem = it; G.y = 0;
+  if(prefs.read) Reader.say(t("gItem",{x:giName(it)}), null);
+}
+function renderGame(){
+  $("#page-play").innerHTML = `<section class="panel" aria-labelledby="gT2" data-noread>
+    <div class="ghud">
+      <h2 id="gT2" style="margin:0" class="grow"><span class="emo" aria-hidden="true">🗑️</span> ${t("gTitle")}</h2>
+      <span class="chip">${t("gScore")}: <span id="gScore">${G.score}</span></span>
+      <span class="chip" aria-label="${t("gLives")}: ${G.lives}" id="gLives">${"❤️".repeat(G.lives)}${"🤍".repeat(3-G.lives)}</span>
+      <button class="btn ghost" type="button" id="gPause">${G.paused?"▶ "+t("gResume"):"⏸ "+t("gPause")}</button>
+      <button class="btn ghost" type="button" id="gQuit">${t("gQuit")}</button>
+    </div>
+    <div class="arena" id="arena">
+      <div class="fall" id="fall"><span class="emo" aria-hidden="true">${G.item[0]}</span><span>${esc(giName(G.item))}</span></div>
+      <div class="gmsg" id="gMsg" hidden></div>
+      <div class="ground" aria-hidden="true"></div>
+    </div>
+    <p class="sr" aria-live="assertive" id="gLive"></p>
+    <div class="bins">${BINS.map(([k,e,l],i)=>`<button type="button" class="bin ${k}" data-bin="${k}"><span class="emo" aria-hidden="true">${e}</span>${t(l)}<small aria-hidden="true">${i+1}</small></button>`).join("")}</div>
+    <p class="muted" style="margin:10px 0 0;font-size:.9rem">${t("gKeys")}</p>
+  </section>`;
+  $$("[data-bin]").forEach(b=>b.onclick=()=>sortInto(b.dataset.bin));
+  $("#gPause").onclick=togglePause;
+  $("#gQuit").onclick=()=>endGame();
+  $("#gLive").textContent = t("gItem",{x:giName(G.item)});
+  if(G.paused) showMsg(t("gPaused"), "ok", true);
+  placeItem();
+}
+function placeItem(){
+  const a=$("#arena"), f=$("#fall"); if(!a||!f) return;
+  const max = a.clientHeight - f.offsetHeight - 12;
+  f.style.transform = `translate(-50%, ${Math.max(0,G.y*max)}px)`;
+}
+function loop(){
+  cancelAnimationFrame(G.raf);
+  G.last = performance.now();
+  const step = now => {
+    if(G.mode!=="play") return;
+    const dt = Math.min(.05,(now-G.last)/1000); G.last = now;
+    if(!G.paused){
+      G.y += G.speed*dt;
+      if(G.y>=1){ miss(); }
+      placeItem();
+    }
+    G.raf = requestAnimationFrame(step);
+  };
+  G.raf = requestAnimationFrame(step);
+}
+function showMsg(text, cls, sticky){
+  const m=$("#gMsg"); if(!m) return;
+  m.textContent=text; m.className="gmsg "+cls; m.hidden=false;
+  clearTimeout(G.msgT); if(!sticky) G.msgT=setTimeout(()=>{ if(m.isConnected) m.hidden=true; },1400);
+}
+function updHud(){
+  $("#gScore") && ($("#gScore").textContent=G.score);
+  const l=$("#gLives"); if(l){ l.textContent="❤️".repeat(G.lives)+"🤍".repeat(3-G.lives); l.setAttribute("aria-label",`${t("gLives")}: ${G.lives}`); }
+}
+function sortInto(bin){
+  if(G.mode!=="play" || G.paused) return;
+  const it=G.item;
+  if(bin===it[3]){ G.score++; G.speed=Math.min(.6,G.speed+.012); showMsg(t("gRight"),"ok"); }
+  else { G.lives--; showMsg(t("gWrongBin",{x:giName(it),b:binName(it[3])}),"no"); }
+  afterSort();
+}
+function miss(){
+  const it=G.item; G.lives--;
+  showMsg(t("gMissed",{x:giName(it),b:binName(it[3])}),"no"); afterSort();
+}
+function afterSort(){
+  updHud();
+  if(G.lives<=0){ endGame(); return; }
+  nextItem();
+  const f=$("#fall"); if(f) f.innerHTML=`<span class="emo" aria-hidden="true">${G.item[0]}</span><span>${esc(giName(G.item))}</span>`;
+  const msg=$("#gMsg")?.textContent||"";
+  $("#gLive") && ($("#gLive").textContent = msg+" "+t("gItem",{x:giName(G.item)}));
+}
+function togglePause(){
+  if(G.mode!=="play") return;
+  G.paused=!G.paused;
+  $("#gPause").textContent = G.paused?"▶ "+t("gResume"):"⏸ "+t("gPause");
+  if(G.paused) showMsg(t("gPaused"),"ok",true); else { $("#gMsg").hidden=true; G.last=performance.now(); }
+}
+function endGame(){
+  cancelAnimationFrame(G.raf);
+  const earned = G.score*GAME_REWARD, isBest = G.score>PL.best;
+  PL.pts += earned; if(isBest) PL.best=G.score; savePL();
+  G = {mode:"over", score:G.score, earned, isBest};
+  renderPlay();
+  $("#goAgain")?.focus() || $("#goBack")?.focus();
+}
+function renderOver(){
+  const can = PL.pts>=GAME_COST;
+  $("#page-play").innerHTML = `<section class="panel gover" aria-labelledby="goT">
+    <h2 id="goT">${t("gOver")}</h2>
+    <div class="big"><span class="emo" aria-hidden="true">🗑️</span> ${G.score}</div>
+    <p>${t("gSorted",{s:G.score,p:G.earned})}</p>
+    ${G.isBest?`<p class="pop" style="font-weight:700;color:var(--accent-text)">🏆 ${t("gNew")}</p>`:""}
+    <p class="muted">🪙 ${PL.pts} ${t("ptsLabel")}</p>
+    <div class="ctrls">
+      ${can?`<button class="btn" type="button" id="goAgain">🎮 ${t("gAgain",{c:GAME_COST})}</button>`:""}
+      <button class="btn ghost" type="button" id="goBack">${t("gBack")}</button>
+    </div></section>`;
+  $("#goAgain") && ($("#goAgain").onclick=startGame);
+  $("#goBack").onclick=()=>{ G={mode:"hub"}; renderPlay(); };
+  announce(t("gOver")+" "+t("gSorted",{s:G.score,p:G.earned}));
+}
+document.addEventListener("visibilitychange", ()=>{ if(document.hidden && G.mode==="play" && !G.paused) togglePause(); });
+
+/* ===== START ===== */
+applyPrefs(); drawGrid();
+if(canSpeak) speechSynthesis.getVoices();
+</script>
+</body>
+</html>
